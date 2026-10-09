@@ -1,0 +1,14 @@
+---
+interface Props { crumbs: { name: string; path?: string }[]; dark?: boolean }
+const { crumbs, dark = false } = Astro.props;
+---
+<nav aria-label="Breadcrumb" class:list={['text-[0.82rem]', dark ? 'text-silver' : 'text-steel-2']}>
+  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+    <li><a href="/" class="hover:underline">Home</a></li>
+    {crumbs.map((c, i) => (
+      <li class="flex items-center gap-2"><span aria-hidden="true" class="opacity-50">/</span>
+        {c.path && i < crumbs.length - 1 ? <a href={c.path} class="hover:underline">{c.name}</a> : <span aria-current="page" class={dark ? 'text-white' : 'text-ink'}>{c.name}</span>}
+      </li>
+    ))}
+  </ol>
+</nav>

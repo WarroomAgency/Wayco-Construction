@@ -1,0 +1,41 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import QuoteForm from '~/components/QuoteForm.astro';
+import Icon from '~/components/Icon.astro';
+import ReviewBadge from '~/components/ReviewBadge.astro';
+import ReviewCard from '~/components/ReviewCard.astro';
+import { featuredReviews } from '~/data/reviews';
+import { site } from '~/data/site';
+import { breadcrumbNode } from '~/lib/seo';
+const params = Astro.url.searchParams;
+const steps = [
+  { t: 'You tell us about your project', d: 'Takes about two minutes. Ballpark details are fine.' },
+  { t: 'We call you within one business day', d: 'A short conversation to understand scope, timeline and budget.' },
+  { t: 'Free on-site consultation', d: 'We walk the space, talk through options and what’s feasible.' },
+  { t: 'Written proposal & schedule', d: 'Clear scope, clear numbers, and a realistic start date.' },
+];
+---
+<BaseLayout title="Request a Free Consultation — ADUs, Remodels & Commercial" description="Request a free consultation with Wayco Construction in El Cajon, CA. ADUs, kitchen and bath remodels, whole-home renovations and commercial projects across San Diego County." path="/request-consultation" ogPhoto="inc-hero-design-build" schema={[breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'Request Consultation', path: '/request-consultation' }])]}>
+  <section class="on-dark relative isolate bg-void pb-4 pt-14 text-white sm:pt-20" data-section="hero">
+    <div class="container-x">
+      <p class="eyebrow mb-4 !text-silver">Free consultation</p>
+      <h1 class="max-w-3xl font-display text-hero !text-white">Tell us what you’re planning.</h1>
+      <p class="mt-5 max-w-2xl text-lg text-silver">No pressure, no obligation. Just an honest conversation with a builder about what’s possible, what it takes and what it costs.</p>
+    </div>
+  </section>
+  <section class="bg-gradient-to-b from-void to-bone pb-20 pt-10 sm:pb-28">
+    <div class="container-x grid items-start gap-10 lg:grid-cols-[1.1fr_1fr]">
+      <div class="order-2 space-y-8 lg:order-1 lg:pt-6">
+        <div class="on-dark hidden lg:block"><ReviewBadge dark /></div>
+        <div>
+          <h2 class="font-display text-display-md">What happens next</h2>
+          <ol class="mt-6 space-y-4">{steps.map((s, i) => <li class="flex gap-4 rounded-2xl bg-white p-5 shadow-soft ring-1 ring-line/60"><span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue font-display text-white">{i + 1}</span><div><p class="font-display text-lg">{s.t}</p><p class="text-steel-2">{s.d}</p></div></li>)}</ol>
+        </div>
+        <ReviewCard review={featuredReviews[2]} />
+        <p class="flex items-center gap-3 text-steel-2"><Icon name="phone" size={18} class="text-blue" />Prefer to talk? Call <a href={site.phoneHref} class="font-semibold text-ink underline" data-loc="consult-page">{site.phone}</a> — Mon–Fri, 7:00 AM–3:30 PM.</p>
+      </div>
+      <div class="order-1 lg:order-2"><QuoteForm id="main" service={params.get('service') ?? ''} title="Request your free consultation" /></div>
+    </div>
+  </section>
+</BaseLayout>

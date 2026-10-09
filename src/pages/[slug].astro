@@ -1,0 +1,155 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import AnswerBox from '~/components/AnswerBox.astro';
+import QuoteForm from '~/components/QuoteForm.astro';
+import Icon from '~/components/Icon.astro';
+import Gallery from '~/components/Gallery.astro';
+import Steps from '~/components/Steps.astro';
+import Faq from '~/components/Faq.astro';
+import ReviewCard from '~/components/ReviewCard.astro';
+import ReviewBadge from '~/components/ReviewBadge.astro';
+import ProjectCard from '~/components/ProjectCard.astro';
+import ServiceCard from '~/components/ServiceCard.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import { services, serviceBySlug } from '~/data/services';
+import { projectBySlug } from '~/data/projects';
+import { reviews, featuredReviews } from '~/data/reviews';
+import { site } from '~/data/site';
+import { ids, breadcrumbNode, faqNode, abs } from '~/lib/seo';
+
+export const getStaticPaths = (() => services.map((service) => ({ params: { slug: service.slug }, props: { service } }))) satisfies GetStaticPaths;
+const { service: s } = Astro.props;
+const catLabel = { residential: 'Residential', commercial: 'Commercial', process: 'How We Build' }[s.category];
+
+const tagMap: Record<string, string[]> = {
+  'kitchen-remodeling': ['kitchen'], 'bathroom-remodeling': ['bathroom'], 'whole-home-renovation': ['remodel', 'rebuild'], 'home-additions': ['remodel'], 'custom-home-construction': ['rebuild', 'remodel'],
+  'exterior-improvements': ['exterior', 'remodel'], 'outdoor-living': ['exterior'], 'commercial-construction': ['commercial', 'gc'], 'tenant-improvement': ['commercial'], 'hospitality-and-gaming': ['commercial'],
+  'multi-family-construction': ['property', 'gc'], 'design-build': ['gc', 'remodel'], 'design-and-planning': ['remodel', 'gc'], 'construction-management': ['commercial', 'gc'],
+};
+const wanted = tagMap[s.slug] ?? [];
+let revs = reviews.filter((r) => r.tags.some((t) => wanted.includes(t)));
+const pool = [...revs, ...featuredReviews.filter((r) => !revs.includes(r))].slice(0, 3);
+
+const projs = s.relatedProjects.map((p) => projectBySlug[p]).filter(Boolean).slice(0, 3);
+const related = s.relatedServices.map((r) => serviceBySlug[r]).filter(Boolean).slice(0, 3);
+
+const url = abs(`/${s.slug}`);
+const serviceNode = {
+  '@type': 'Service',
+  '@id': `${url}#service`,
+  name: s.name,
+  serviceType: s.schemaServiceType,
+  description: s.answer,
+  url,
+  provider: { '@id': ids.business },
+  areaServed: { '@type': 'AdministrativeArea', name: 'San Diego County, CA' },
+  ...(s.slug === 'adu-construction'
+    ? { offers: { '@type': 'AggregateOffer', priceCurrency: 'USD', lowPrice: site.aduPriceRange.low, highPrice: site.aduPriceRange.high, description: 'Turnkey ground-up ADU packages; final price depends on site conditions, utilities and finishes.' } }
+    : {}),
+};
+const webPage = { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: s.seoTitle, description: s.metaDescription, isPartOf: { '@id': ids.site }, about: { '@id': `${url}#service` }, speakable: { '@type': 'SpeakableSpecification', cssSelector: ['[data-answer]', 'h1'] } };
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Services', path: '/services' }, { name: s.name, path: `/${s.slug}` }];
+---
+<BaseLayout title={s.seoTitle} description={s.metaDescription} path={`/${s.slug}`} ogPhoto={s.heroPhoto} schema={[webPage, serviceNode, breadcrumbNode(crumbs), faqNode(s.faqs)]} lightbox>
+  <PageHero eyebrow={`${catLabel} · ${s.eyebrow}`} h1={s.h1} lead={s.summary} photo={s.heroPhoto} photoAlt={`${s.name} by Wayco Construction in San Diego County`} crumbs={[{ name: 'Services', path: '/services' }, { name: s.name }]} chips={['1-year workmanship warranty', 'Permits handled', 'Free consultation']} />
+
+  <section class="section" data-section="intro">
+    <div class="container-x grid items-start gap-12 lg:grid-cols-[1.5fr_1fr]">
+      <div class="space-y-8">
+        <AnswerBox text={s.answer} />
+        <div class="space-y-5 text-lg leading-relaxed text-steel">
+          {s.intro.map((p) => <p>{p}</p>)}
+        </div>
+        <ReviewBadge />
+      </div>
+      <aside class="lg:sticky lg:top-28"><QuoteForm id="svc" service={s.slug} compact title={`Start your ${s.name.toLowerCase()} project`} /></aside>
+    </div>
+  </section>
+
+  <section class="section bg-bone-2" data-section="included">
+    <div class="container-x">
+      <SectionHead eyebrow="Scope" title={`What’s included in our ${s.name.toLowerCase()} work`} />
+      <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {s.included.map((i, n) => (
+          <div class="reveal rounded-3xl bg-white p-7 shadow-soft ring-1 ring-line/60">
+            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-soft font-display text-lg text-blue">{n + 1}</span>
+            <h3 class="mt-4 font-display text-xl">{i.title}</h3>
+            <p class="mt-2 leading-relaxed text-steel-2">{i.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="on-dark bg-void py-20 text-white sm:py-28" data-section="why">
+    <div class="container-x grid gap-14 lg:grid-cols-[1fr_1.4fr]">
+      <SectionHead dark eyebrow="Why Wayco" title={`Why homeowners and owners choose Wayco for ${s.name.toLowerCase()}`} />
+      <div class="grid gap-6 sm:grid-cols-2">
+        {s.whyWayco.map((w) => <div class="reveal rounded-3xl bg-white/[.06] p-7 ring-1 ring-white/10"><Icon name="check" size={22} class="text-blue-hi" /><h3 class="mt-4 font-display text-xl !text-white">{w.title}</h3><p class="mt-2 leading-relaxed text-silver">{w.text}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" data-section="process">
+    <div class="container-x">
+      <SectionHead eyebrow="Our process" title={`How a ${s.name.toLowerCase()} project works with Wayco`} />
+      <div class="mt-12"><Steps steps={s.process} /></div>
+    </div>
+  </section>
+
+  {s.gallery.length > 0 && (
+    <section class="section bg-bone-2 pt-16" data-section="gallery">
+      <div class="container-x">
+        <div class="flex flex-wrap items-end justify-between gap-6"><SectionHead eyebrow="In the field" title={`${s.name}: recent work & inspiration`} /><a href="/projects" class="link-arrow">Full portfolio <Icon name="arrow" size={16} /></a></div>
+        <div class="mt-10"><Gallery photos={s.gallery.filter((k) => k !== s.heroPhoto)} alt={`${s.name} by Wayco Construction`} group={s.slug} /></div>
+      </div>
+    </section>
+  )}
+
+  {(s.costFactors?.length || s.idealFor.length) ? (
+    <section class="section" data-section="cost">
+      <div class="container-x grid gap-12 lg:grid-cols-2">
+        {s.costFactors && s.costFactors.length > 0 && (
+          <div>
+            <SectionHead eyebrow="Budgeting" title={`What drives the cost of ${s.name.toLowerCase()}`} text="Every project is different, so we scope and price yours in writing after a free consultation. These are the factors that move the number most." />
+            <dl class="mt-8 space-y-4">{s.costFactors.map((c) => <div class="rounded-2xl bg-white p-5 shadow-soft ring-1 ring-line/60"><dt class="font-display text-lg">{c.title}</dt><dd class="mt-1 leading-relaxed text-steel-2">{c.text}</dd></div>)}</dl>
+          </div>
+        )}
+        <div>
+          <SectionHead eyebrow="Is this for you?" title="This is a great fit if…" />
+          <ul class="mt-8 space-y-3">{s.idealFor.map((i) => <li class="flex gap-3 rounded-2xl bg-blue-soft/60 p-4"><Icon name="check" size={20} class="mt-0.5 shrink-0 text-blue" /><span class="leading-relaxed text-steel">{i}</span></li>)}</ul>
+        </div>
+      </div>
+    </section>
+  ) : null}
+
+  {projs.length > 0 && (
+    <section class="section bg-bone-2" data-section="projects">
+      <div class="container-x">
+        <SectionHead eyebrow="Related projects" title="Recent work like this" />
+        <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{projs.map((p) => <div class="reveal"><ProjectCard project={p} /></div>)}</div>
+      </div>
+    </section>
+  )}
+
+  <section class="on-dark bg-ink py-20 text-white sm:py-24" data-section="reviews">
+    <div class="container-x">
+      <div class="flex flex-wrap items-end justify-between gap-6"><SectionHead dark eyebrow="Google reviews" title="Clients on working with Wayco" /><ReviewBadge dark /></div>
+      <div class="mt-10 grid gap-5 md:grid-cols-3">{pool.map((r) => <div class="reveal"><ReviewCard review={r} dark /></div>)}</div>
+      <p class="mt-8"><a href="/reviews" class="link-arrow !text-white">Read all {site.google.reviewCount} Google reviews <Icon name="arrow" size={16} /></a></p>
+    </div>
+  </section>
+
+  <section class="section" data-section="faq"><div class="container-n"><Faq faqs={s.faqs} title={`${s.name}: your questions answered`} /></div></section>
+
+  {related.length > 0 && (
+    <section class="section bg-bone-2 pt-16">
+      <div class="container-x"><SectionHead eyebrow="Keep exploring" title="Related services" /><div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{related.map((r) => <div class="reveal"><ServiceCard service={r} /></div>)}</div></div>
+    </section>
+  )}
+
+  <CtaBand title={`Let’s talk about your ${s.name.toLowerCase()} project`} photo={s.heroPhoto} />
+</BaseLayout>

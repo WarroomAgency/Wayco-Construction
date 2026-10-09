@@ -1,0 +1,72 @@
+---
+import { Image } from 'astro:assets';
+import logo from '~/assets/wayco-logo.png';
+import Icon from './Icon.astro';
+import { site, fullAddress } from '~/data/site';
+import { residential, commercial, process } from '~/data/services';
+import { areas } from '~/data/areas';
+const year = new Date().getFullYear();
+const socials = [...site.social, ...site.extraProfiles.map((p) => ({ ...p, handle: p.name }))];
+---
+<footer class="on-dark bg-void text-silver" data-pagefind-ignore data-section="footer">
+  <div class="container-x grid gap-12 py-16 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
+    <div>
+      <Image src={logo} alt="Wayco Construction, Inc." height={64} width={119} class="h-16 w-auto" loading="lazy" />
+      <p class="mt-5 max-w-sm text-[0.95rem] leading-relaxed">Family-owned design-build general contractor serving San Diego County. ADUs, remodels, new construction and commercial build-outs — designed, permitted and built under one roof.</p>
+      <address class="mt-6 space-y-3 not-italic text-[0.95rem]">
+        <p class="flex gap-3"><Icon name="pin" size={18} class="mt-0.5 shrink-0 text-blue-hi" /><a href={site.google.mapsUrl} target="_blank" rel="noopener" data-track="directions" class="hover:text-white">{site.address.street}<br />{site.address.city}, {site.address.region} {site.address.zip}</a></p>
+        <p class="flex gap-3"><Icon name="phone" size={18} class="shrink-0 text-blue-hi" /><a href={site.phoneHref} class="font-semibold text-white" data-loc="footer">{site.phone}</a></p>
+        <p class="flex gap-3"><Icon name="mail" size={18} class="shrink-0 text-blue-hi" /><a href={`mailto:${site.email}`} class="hover:text-white" data-loc="footer">{site.email}</a></p>
+        <p class="flex gap-3"><Icon name="clock" size={18} class="mt-0.5 shrink-0 text-blue-hi" /><span>Mon–Fri · 7:00 AM – 3:30 PM<br /><span class="text-silver-2">Showroom visits by appointment</span></span></p>
+      </address>
+      {site.license.number && <p class="mt-5 text-sm text-silver-2">CSLB License #{site.license.number} {site.license.classes}</p>}
+      <ul class="mt-6 flex gap-2">
+        {socials.map((s) => <li><a href={s.url} target="_blank" rel="noopener me" aria-label={`Wayco Construction on ${s.name}`} data-track="social" data-network={s.name} class="flex h-11 w-11 items-center justify-center rounded-full bg-white/8 text-white ring-1 ring-white/15 transition hover:bg-blue hover:ring-blue"><Icon name={s.name.toLowerCase()} size={19} /></a></li>)}
+        <li><a href={site.google.reviewsUrl} target="_blank" rel="noopener" aria-label="Wayco Construction Google reviews" data-track="google-review" class="flex h-11 w-11 items-center justify-center rounded-full bg-white ring-1 ring-white/15"><Icon name="google" size={20} /></a></li>
+      </ul>
+    </div>
+    <nav aria-label="Residential services">
+      <p class="eyebrow mb-5 !text-white">Residential</p>
+      <ul class="space-y-2.5 text-[0.95rem]">{residential.map((s) => <li><a href={`/${s.slug}`} class="hover:text-white">{s.name}</a></li>)}</ul>
+    </nav>
+    <nav aria-label="Commercial services and process">
+      <p class="eyebrow mb-5 !text-white">Commercial &amp; Process</p>
+      <ul class="space-y-2.5 text-[0.95rem]">{[...commercial, ...process].map((s) => <li><a href={`/${s.slug}`} class="hover:text-white">{s.name}</a></li>)}</ul>
+    </nav>
+    <nav aria-label="Company">
+      <p class="eyebrow mb-5 !text-white">Company</p>
+      <ul class="space-y-2.5 text-[0.95rem]">
+        <li><a href="/projects" class="hover:text-white">Project Portfolio</a></li>
+        <li><a href="/reviews" class="hover:text-white">Google Reviews</a></li>
+        <li><a href="/about" class="hover:text-white">About</a></li>
+        <li><a href="/meet-the-team" class="hover:text-white">Meet the Team</a></li>
+        <li><a href="/faqs" class="hover:text-white">FAQs</a></li>
+        <li><a href="/blog" class="hover:text-white">Blog &amp; Guides</a></li>
+        <li><a href="/serving-area" class="hover:text-white">Areas We Serve</a></li>
+        <li><a href="/contact" class="hover:text-white">Contact</a></li>
+        <li><a href="/request-consultation" class="font-semibold text-white">Free Consultation →</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="container-x py-8">
+      <p class="eyebrow mb-4 !text-silver-2">Serving San Diego County</p>
+      <ul class="flex flex-wrap gap-x-5 gap-y-2 text-[0.9rem]">
+        {areas.map((a) => <li><a href={`/areas/${a.slug}`} class="hover:text-white">{a.name}</a></li>)}
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="container-x flex flex-col gap-4 py-6 text-[0.82rem] text-silver-2 md:flex-row md:items-center md:justify-between">
+      <p>© {year} Wayco Construction, Inc. All rights reserved. {site.address.city}, California.</p>
+      <ul class="flex flex-wrap gap-x-5 gap-y-2">
+        <li><a href="/privacy-policy" class="hover:text-white">Privacy Policy</a></li>
+        <li><a href="/terms" class="hover:text-white">Terms of Use</a></li>
+        <li><a href="/cookie-policy" class="hover:text-white">Cookie Policy</a></li>
+        <li><a href="/accessibility" class="hover:text-white">Accessibility</a></li>
+        <li><a href="/sitemap" class="hover:text-white">Sitemap</a></li>
+        <li><button type="button" data-consent="open" class="underline decoration-dotted underline-offset-4 hover:text-white">Your Privacy Choices</button></li>
+      </ul>
+    </div>
+  </div>
+</footer>

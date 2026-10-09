@@ -1,0 +1,21 @@
+---
+import LegalLayout from '~/layouts/LegalLayout.astro';
+import { site } from '~/data/site';
+---
+<LegalLayout title="Terms of Use" description="Terms of use for the Wayco Construction, Inc. website, including how cost ranges, timelines and project information on this site should be understood." path="/terms" updated="October 9, 2026">
+  <p>By using this website you agree to these terms. If you don’t agree, please don’t use the site.</p>
+  <h2>Information is general</h2>
+  <p>Content on this site — including cost ranges, timelines and descriptions of services — is general information, not a quote, bid, offer or professional advice. Pricing and schedules depend on site conditions, scope, materials and local requirements, and are confirmed only in a written proposal or contract signed by Wayco.</p>
+  <h2>No contractor-client relationship from the site</h2>
+  <p>Submitting a form or contacting us does not create a contract. A construction agreement exists only when a written contract is signed by both parties.</p>
+  <h2>Intellectual property</h2>
+  <p>The site’s text, graphics, photographs, logos and design are owned by Wayco or used with permission and may not be copied or reused without written consent. Project photos may depict work completed by our team, partners or other contractors in our leadership’s portfolio; trademarks of third parties belong to their owners.</p>
+  <h2>Reviews and third-party content</h2>
+  <p>Reviews are reproduced from public Google reviews. Third-party links are provided for convenience; we are not responsible for their content or practices.</p>
+  <h2>Disclaimer and limitation of liability</h2>
+  <p>The site is provided “as is” without warranties of any kind. To the fullest extent permitted by law, Wayco is not liable for any damages arising from use of the site.</p>
+  <h2>Governing law</h2>
+  <p>These terms are governed by the laws of the State of California. Disputes will be handled in the courts located in San Diego County, California.</p>
+  <h2>Contact</h2>
+  <p><a href={site.phoneHref}>{site.phone}</a> · <a href={`mailto:${site.email}`}>{site.email}</a></p>
+</LegalLayout>

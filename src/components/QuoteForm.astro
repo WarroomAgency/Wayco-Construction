@@ -1,0 +1,44 @@
+---
+import Icon from './Icon.astro';
+import { services } from '~/data/services';
+import { site } from '~/data/site';
+interface Props { service?: string; id?: string; title?: string; sub?: string; compact?: boolean; dark?: boolean }
+const { service = '', id = 'consult', title = 'Request a free consultation', sub = 'Tell us about your project — a member of our team will reach out, usually within one business day.', compact = false, dark = false } = Astro.props;
+const groups = [
+  { label: 'Residential', items: services.filter((s) => s.category === 'residential') },
+  { label: 'Commercial', items: services.filter((s) => s.category === 'commercial') },
+  { label: 'Planning & management', items: services.filter((s) => s.category === 'process') },
+];
+const input = 'w-full rounded-xl border border-line bg-white px-4 py-3.5 text-[0.98rem] text-ink placeholder:text-silver-2 focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue/30';
+const label = 'mb-1.5 block text-[0.82rem] font-semibold text-steel';
+---
+<form name="consultation" method="POST" action="/thank-you" data-netlify="true" netlify-honeypot="bot-field" id={`form-${id}`} class:list={['rounded-3xl p-6 shadow-lift ring-1 sm:p-8', dark ? 'bg-white text-ink ring-white/20' : 'bg-white ring-line/70']} data-section="quote-form">
+  <input type="hidden" name="form-name" value="consultation" />
+  <p class="hidden"><label>Don’t fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+  {['page_url', 'landing', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'msclkid'].map((n) => <input type="hidden" name={n} value="" />)}
+  <h2 class="font-display text-display-sm">{title}</h2>
+  <p class="mt-1.5 text-[0.92rem] text-steel-2">{sub}</p>
+  <div class="mt-6 grid gap-4 sm:grid-cols-2">
+    <div><label class={label} for={`${id}-name`}>Full name *</label><input class={input} id={`${id}-name`} name="name" required autocomplete="name" placeholder="Jane Smith" /></div>
+    <div><label class={label} for={`${id}-phone`}>Phone *</label><input class={input} id={`${id}-phone`} name="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="(619) 555-0123" /></div>
+    <div class="sm:col-span-2"><label class={label} for={`${id}-email`}>Email *</label><input class={input} id={`${id}-email`} name="email" type="email" required autocomplete="email" placeholder="you@email.com" /></div>
+    <div class={compact ? 'sm:col-span-2' : ''}>
+      <label class={label} for={`${id}-service`}>What do you need? *</label>
+      <select class={input} id={`${id}-service`} name="service" required>
+        <option value="" disabled selected={!service}>Select a service</option>
+        {groups.map((g) => <optgroup label={g.label}>{g.items.map((s) => <option value={s.name} selected={s.slug === service}>{s.name}</option>)}</optgroup>)}
+        <option value="Not sure yet">Not sure yet</option>
+      </select>
+    </div>
+    {!compact && <div><label class={label} for={`${id}-zip`}>Project ZIP / city</label><input class={input} id={`${id}-zip`} name="location" autocomplete="postal-code" placeholder="El Cajon, 92021" /></div>}
+    {!compact && <div><label class={label} for={`${id}-timeline`}>Ideal start</label>
+      <select class={input} id={`${id}-timeline`} name="timeline"><option value="">Select…</option><option>As soon as possible</option><option>Within 1–3 months</option><option>3–6 months</option><option>Just planning / budgeting</option></select></div>}
+    {!compact && <div><label class={label} for={`${id}-source`}>How did you hear about us?</label>
+      <select class={input} id={`${id}-source`} name="heard_from"><option value="">Select…</option><option>Google search</option><option>Google Maps / reviews</option><option>Referral</option><option>Facebook / Instagram</option><option>Drove by a job site</option><option>Other</option></select></div>}
+    <div class="sm:col-span-2"><label class={label} for={`${id}-msg`}>Tell us about your project</label><textarea class={input} id={`${id}-msg`} name="message" rows={compact ? 3 : 4} placeholder="Size, location, timeline, must-haves…"></textarea></div>
+  </div>
+  <label class="mt-4 flex items-start gap-3 text-[0.82rem] leading-snug text-steel-2"><input type="checkbox" name="sms_ok" value="yes" class="mt-0.5 h-4 w-4 shrink-0 accent-blue" /><span>It’s OK to text me about my project. Message &amp; data rates may apply; reply STOP to opt out. Optional.</span></label>
+  <button type="submit" class="btn btn-primary mt-6 w-full text-base" data-label="Request My Free Consultation">Request My Free Consultation <Icon name="arrow" size={18} /></button>
+  <p data-error hidden role="alert" class="mt-3 rounded-lg bg-red-50 p-3 text-sm text-red-800">Something went wrong sending your request. Please call us at <a class="font-semibold underline" href={site.phoneHref}>{site.phone}</a> and we’ll take care of you.</p>
+  <p class="mt-4 text-center text-[0.78rem] text-silver-3">No spam, no obligation. We’ll only use your details to respond to your request — see our <a href="/privacy-policy" class="underline">Privacy Policy</a>.</p>
+</form>

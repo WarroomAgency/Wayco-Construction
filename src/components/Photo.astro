@@ -1,0 +1,19 @@
+---
+import { Image } from 'astro:assets';
+import { photo } from '~/lib/photos';
+interface Props {
+  name: string;                 // photo key
+  alt: string;
+  class?: string;
+  sizes?: string;
+  loading?: 'lazy' | 'eager';
+  priority?: boolean;
+  widths?: number[];
+  ratio?: string;               // e.g. "16/9" – sets aspect ratio via style + object-cover
+  position?: string;
+}
+const { name, alt, class: cls = '', sizes = '(min-width:1024px) 50vw, 100vw', loading = 'lazy', priority = false, widths = [480, 800, 1200, 1800], ratio, position } = Astro.props;
+const src = photo(name);
+const style = [ratio ? `aspect-ratio:${ratio}` : '', position ? `object-position:${position}` : ''].filter(Boolean).join(';');
+---
+<Image src={src} alt={alt} class:list={['object-cover', cls]} sizes={sizes} widths={widths} loading={priority ? 'eager' : loading} fetchpriority={priority ? 'high' : undefined} decoding={priority ? 'sync' : 'async'} style={style || undefined} />

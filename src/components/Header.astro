@@ -1,0 +1,99 @@
+---
+import { Image } from 'astro:assets';
+import logo from '~/assets/wayco-logo.png';
+import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+import { site } from '~/data/site';
+import { mainNav } from '~/data/nav';
+const path = Astro.url.pathname.replace(/\.html$/, '');
+const is = (p: string) => path === p || path.startsWith(p + '/');
+---
+<div class="hidden bg-void text-[0.78rem] text-silver lg:block" data-pagefind-ignore>
+  <div class="container-x flex items-center justify-between py-2">
+    <p class="flex items-center gap-5">
+      <span class="flex items-center gap-1.5"><Icon name="shield" size={14} class="text-blue-hi" /> 1-year workmanship warranty</span>
+      <span class="flex items-center gap-1.5"><Icon name="file" size={14} class="text-blue-hi" /> Permitting handled</span>
+      <span class="flex items-center gap-1.5"><Icon name="check" size={14} class="text-blue-hi" /> Free consultations</span>
+    </p>
+    <p class="flex items-center gap-5">
+      <a href={site.google.reviewsUrl} target="_blank" rel="noopener" data-track="google-review" class="flex items-center gap-1.5 hover:text-white"><Icon name="google" size={14} /> {site.google.rating}★ · {site.google.reviewCount} Google reviews</a>
+      <span class="flex items-center gap-1.5"><Icon name="clock" size={14} /> Mon–Fri 7:00–3:30</span>
+    </p>
+  </div>
+</div>
+<header class="sticky top-0 z-50 border-b border-white/10 bg-ink/95 text-white backdrop-blur-xl" data-pagefind-ignore data-section="header">
+  <div class="container-x flex h-[4.5rem] items-center justify-between gap-6">
+    <a href="/" class="flex shrink-0 items-center gap-3" aria-label="Wayco Construction — home">
+      <Image src={logo} alt="Wayco Construction, Inc. logo" height={44} width={82} class="h-11 w-auto" loading="eager" />
+    </a>
+
+    <nav aria-label="Primary" class="hidden items-center gap-1 lg:flex">
+      <div class="relative" data-menu>
+        <button type="button" data-menu-btn aria-expanded="false" aria-haspopup="true" class:list={['flex items-center gap-1.5 rounded-full px-4 py-2 text-[0.92rem] font-medium hover:bg-white/10', is('/services') && 'bg-white/10']}>Services <Icon name="chevron" size={15} /></button>
+        <div data-menu-panel hidden class="absolute left-1/2 top-full z-50 w-[min(1000px,92vw)] -translate-x-[40%] pt-3">
+          <div class="grid grid-cols-[1fr_1fr_1fr_1.15fr] gap-8 rounded-3xl bg-white p-8 text-ink shadow-lift ring-1 ring-line">
+            {mainNav.groups.map((g) => (
+              <div>
+                <p class="eyebrow mb-4">{g.title}</p>
+                <ul class="space-y-1">
+                  {g.links.map((l) => <li><a href={l.href} class:list={['block rounded-lg px-2 py-1.5 text-[0.93rem] text-steel hover:bg-bone hover:text-blue', path === l.href && 'text-blue font-semibold']}>{l.name}</a></li>)}
+                </ul>
+              </div>
+            ))}
+            <a href="/adu-construction" class="group relative overflow-hidden rounded-2xl bg-void text-white">
+              <Photo name="elliot-adu-gallery-05" alt="Finished turnkey ADU interior by Wayco Construction" class="absolute inset-0 h-full w-full opacity-70 transition duration-700 group-hover:scale-105" sizes="320px" widths={[320, 640]} />
+              <div class="relative flex h-full min-h-[260px] flex-col justify-end bg-gradient-to-t from-void via-void/50 to-transparent p-5">
+                <p class="text-eyebrow uppercase tracking-widest text-silver">Featured</p>
+                <p class="mt-1 font-display text-xl leading-tight">Turnkey ADUs from {site.aduPriceRange.label.split('–')[0]}</p>
+                <p class="mt-2 text-sm text-silver">Design, engineering, permits &amp; construction under one contract.</p>
+                <span class="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-white">Explore ADUs <Icon name="arrow" size={16} /></span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <a href="/projects" class:list={['rounded-full px-4 py-2 text-[0.92rem] font-medium hover:bg-white/10', is('/projects') && 'bg-white/10']}>Projects</a>
+      <a href="/adu-construction" class:list={['rounded-full px-4 py-2 text-[0.92rem] font-medium hover:bg-white/10', is('/adu-construction') && 'bg-white/10']}>ADUs</a>
+      <div class="relative" data-menu>
+        <button type="button" data-menu-btn aria-expanded="false" aria-haspopup="true" class="flex items-center gap-1.5 rounded-full px-4 py-2 text-[0.92rem] font-medium hover:bg-white/10">Company <Icon name="chevron" size={15} /></button>
+        <div data-menu-panel hidden class="absolute left-0 top-full z-50 w-60 pt-3">
+          <ul class="rounded-2xl bg-white p-3 text-ink shadow-lift ring-1 ring-line">
+            {mainNav.about.map((l) => <li><a href={l.href} class="block rounded-lg px-3 py-2 text-[0.93rem] text-steel hover:bg-bone hover:text-blue">{l.name}</a></li>)}
+          </ul>
+        </div>
+      </div>
+      <a href="/serving-area" class:list={['rounded-full px-4 py-2 text-[0.92rem] font-medium hover:bg-white/10', (is('/serving-area') || is('/areas')) && 'bg-white/10']}>Areas</a>
+      <a href="/contact" class:list={['rounded-full px-4 py-2 text-[0.92rem] font-medium hover:bg-white/10', is('/contact') && 'bg-white/10']}>Contact</a>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="/search" class="hidden h-10 w-10 items-center justify-center rounded-full text-silver hover:bg-white/10 hover:text-white sm:flex" aria-label="Search the site"><Icon name="search" size={19} /></a>
+      <a href={site.phoneHref} data-loc="header" class="hidden items-center gap-2 rounded-full px-3 py-2 text-[0.92rem] font-semibold hover:bg-white/10 xl:flex"><Icon name="phone" size={17} class="text-blue-hi" /> {site.phone}</a>
+      <a href="/request-consultation" data-track="cta" data-loc="header" class="btn btn-primary hidden !py-2.5 sm:inline-flex">Free Consultation</a>
+      <button id="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu" class="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 lg:hidden"><Icon name="menu" size={22} /></button>
+    </div>
+  </div>
+</header>
+
+<div id="mobile-nav" hidden class="fixed inset-0 top-[4.5rem] z-40 overflow-y-auto bg-void text-white lg:hidden" data-pagefind-ignore>
+  <div class="container-x space-y-2 py-6 pb-32">
+    {mainNav.groups.map((g) => (
+      <details class="rounded-2xl bg-white/5 px-4 py-1 open:bg-white/10">
+        <summary class="flex cursor-pointer items-center justify-between py-3 text-lg font-display">{g.title}<Icon name="chevron" size={18} /></summary>
+        <ul class="pb-3">{g.links.map((l) => <li><a href={l.href} class="block py-2 text-silver hover:text-white">{l.name}</a></li>)}</ul>
+      </details>
+    ))}
+    <a href="/projects" class="block rounded-2xl bg-white/5 px-4 py-4 text-lg font-display">Projects</a>
+    <a href="/adu-construction" class="block rounded-2xl bg-white/5 px-4 py-4 text-lg font-display">ADUs</a>
+    <a href="/reviews" class="block rounded-2xl bg-white/5 px-4 py-4 text-lg font-display">Reviews</a>
+    <a href="/about" class="block rounded-2xl bg-white/5 px-4 py-4 text-lg font-display">About &amp; Team</a>
+    <a href="/serving-area" class="block rounded-2xl bg-white/5 px-4 py-4 text-lg font-display">Areas We Serve</a>
+    <a href="/blog" class="block rounded-2xl bg-white/5 px-4 py-4 text-lg font-display">Blog</a>
+    <a href="/search" class="block rounded-2xl bg-white/5 px-4 py-4 text-lg font-display">Search</a>
+    <a href="/contact" class="block rounded-2xl bg-white/5 px-4 py-4 text-lg font-display">Contact</a>
+    <div class="grid gap-3 pt-4">
+      <a href="/request-consultation" class="btn btn-primary" data-track="cta" data-loc="mobile-nav">Free Consultation</a>
+      <a href={site.phoneHref} class="btn btn-ghost-light" data-loc="mobile-nav"><Icon name="phone" size={18} /> {site.phone}</a>
+    </div>
+  </div>
+</div>

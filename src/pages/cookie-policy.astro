@@ -1,0 +1,23 @@
+---
+import LegalLayout from '~/layouts/LegalLayout.astro';
+---
+<LegalLayout title="Cookie Policy" description="Which cookies and similar technologies wayco construction uses, and how to control them." path="/cookie-policy" updated="October 9, 2026">
+  <p>Cookies are small files stored on your device. We also use similar technologies (local storage, pixels). Here’s what we use and why.</p>
+  <table>
+    <thead><tr><th>Category</th><th>Purpose</th><th>Default</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Essential</strong></td><td>Security, form spam protection, remembering your privacy choice (stored in your browser as <code>wayco_consent_v1</code>).</td><td>Always on</td></tr>
+      <tr><td><strong>Analytics</strong></td><td>Understand which pages, services and projects visitors find useful (Google Analytics 4 via Google Tag Manager).</td><td>Off until you opt in</td></tr>
+      <tr><td><strong>Advertising &amp; measurement</strong></td><td>Measure ad performance and conversions (e.g., Google Ads, Meta) and show relevant ads.</td><td>Off until you opt in; always off with GPC</td></tr>
+    </tbody>
+  </table>
+  <h2>Consent Mode</h2>
+  <p>We use Google Consent Mode v2. Until you choose, analytics and advertising storage is denied. If analytics storage is denied, Google tags may send limited, cookieless pings that do not identify you.</p>
+  <h2>Session storage</h2>
+  <p>To tell us where a request came from, we temporarily keep campaign parameters (such as UTM tags) in your browser’s session storage and include them if you submit a form. This data clears when you close the tab.</p>
+  <h2>Embedded content</h2>
+  <p>The Google map on our contact page loads only after you click “Load interactive map.”</p>
+  <h2>Managing your choices</h2>
+  <p>Use the “Your Privacy Choices” link in the footer at any time, or change your browser settings. We honor the Global Privacy Control signal as an opt-out of advertising cookies.</p>
+  <p><button type="button" data-consent="open" class="btn btn-dark">Open privacy preferences</button></p>
+</LegalLayout>

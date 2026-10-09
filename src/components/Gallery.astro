@@ -1,0 +1,17 @@
+---
+import Photo from './Photo.astro';
+import { photo } from '~/lib/photos';
+import { getImage } from 'astro:assets';
+interface Props { photos: string[]; alt: string; group?: string; cols?: string; limit?: number }
+const { photos, alt, group = 'g', cols = 'columns-2 md:columns-3', limit } = Astro.props;
+const list = limit ? photos.slice(0, limit) : photos;
+const full = await Promise.all(list.map(async (k) => (await getImage({ src: photo(k), width: 2000, format: 'webp', quality: 82 })).src));
+---
+<div class:list={['gap-3 sm:gap-4 [&>*]:mb-3 sm:[&>*]:mb-4', cols]}>
+  {list.map((k, i) => (
+    <a href={full[i]} data-lightbox={group} data-full={full[i]} data-alt={`${alt} — photo ${i + 1}`} class="group relative block break-inside-avoid overflow-hidden rounded-2xl bg-bone-2" aria-label={`Open photo ${i + 1} of ${list.length}: ${alt}`}>
+      <Photo name={k} alt={`${alt} — photo ${i + 1}`} class="h-auto w-full transition duration-700 group-hover:scale-[1.04]" sizes="(min-width:1024px) 30vw, 50vw" widths={[400, 700, 1000]} />
+      <span class="pointer-events-none absolute inset-0 bg-ink/0 transition group-hover:bg-ink/20"></span>
+    </a>
+  ))}
+</div>

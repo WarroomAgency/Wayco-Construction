@@ -1,0 +1,30 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import ProjectCard from '~/components/ProjectCard.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import AnswerBox from '~/components/AnswerBox.astro';
+import { projects } from '~/data/projects';
+import { breadcrumbNode, abs } from '~/lib/seo';
+const filters = [
+  ['all', 'All projects'], ['adu', 'ADUs'], ['kitchen', 'Kitchens'], ['bathroom', 'Bathrooms'], ['multi-family', 'Multi-family'],
+  ['hospitality', 'Hotels & bars'], ['gaming', 'Casinos'], ['aviation', 'Aviation'], ['healthcare', 'Healthcare'], ['retail', 'Retail'],
+];
+const present = filters.filter(([k]) => k === 'all' || projects.some((p) => p.category === k));
+const list = { '@type': 'ItemList', itemListElement: projects.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(`/projects/${p.slug}`), name: p.name })) };
+---
+<BaseLayout title="Project Portfolio — ADUs, Remodels & Commercial" description="Browse ADUs, kitchen and bathroom remodels, hotels, casinos, airports and medical builds by Wayco Construction, a design-build contractor in El Cajon, CA." path="/projects" ogPhoto="casino-pauma-gallery-03" schema={[breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'Projects', path: '/projects' }]), list]}>
+  <PageHero eyebrow="Portfolio" h1="Work we’re proud to put our name on" lead="Residential craft and commercial scale — ADUs, kitchens and baths for homeowners; casinos, hotels, airports and medical offices for owners who can’t afford surprises." photo="casino-pauma-gallery-03" crumbs={[{ name: 'Projects' }]} cta={false} />
+  <section class="section pt-10">
+    <div class="container-x">
+      <AnswerBox label="About this portfolio" text="This portfolio shows selected residential and commercial projects built by the Wayco Construction team, from turnkey ADUs and kitchen and bathroom remodels in San Diego County to casinos, hotels, airport facilities and medical offices. Ask us for references and project details on any category." />
+      <div data-filter-group=".project-item" class="mt-10 flex flex-wrap gap-2" role="group" aria-label="Filter projects">
+        {present.map(([k, l], i) => <button type="button" data-filter={k} aria-pressed={i === 0 ? 'true' : 'false'} class="rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-semibold transition hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-white">{l}</button>)}
+      </div>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {projects.map((p) => <div class="project-item reveal in" data-cats={`${p.category} ${p.sector}`}><ProjectCard project={p} /></div>)}
+      </div>
+    </div>
+  </section>
+  <CtaBand title="Have a project in mind?" />
+</BaseLayout>

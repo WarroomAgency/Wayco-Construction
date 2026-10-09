@@ -1,0 +1,17 @@
+---
+import LegalLayout from '~/layouts/LegalLayout.astro';
+import { site } from '~/data/site';
+---
+<LegalLayout title="Accessibility Statement" description="Wayco Construction is committed to making its website accessible to everyone, including people with disabilities." path="/accessibility" updated="October 9, 2026">
+  <p>Wayco Construction, Inc. is committed to a website that everyone can use. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2, Level AA.</p>
+  <h2>What we do</h2>
+  <ul>
+    <li>Semantic headings, landmarks and a “skip to content” link.</li>
+    <li>Keyboard-operable navigation, menus, galleries, forms and dialogs, with visible focus.</li>
+    <li>Descriptive alt text on informative images and sufficient color contrast.</li>
+    <li>Respect for reduced-motion preferences (animations and auto-playing video are disabled).</li>
+    <li>Labeled form fields and clear error messages.</li>
+  </ul>
+  <h2>Feedback</h2>
+  <p>If you have trouble using any part of this site, tell us and we’ll help right away and work to fix it: <a href={site.phoneHref}>{site.phone}</a> · <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+</LegalLayout>

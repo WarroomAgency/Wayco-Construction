@@ -1,0 +1,36 @@
+---
+import LegalLayout from '~/layouts/LegalLayout.astro';
+import { site, fullAddress } from '~/data/site';
+---
+<LegalLayout title="Privacy Policy" description="How Wayco Construction, Inc. collects, uses and protects personal information, and your California privacy rights." path="/privacy-policy" updated="October 9, 2026">
+  <p>Wayco Construction, Inc. (“Wayco,” “we,” “us”) respects your privacy. This policy explains what we collect through <strong>{site.url.replace('https://', '')}</strong>, how we use it, and the choices and rights you have, including under the California Consumer Privacy Act as amended by the California Privacy Rights Act (CCPA/CPRA).</p>
+  <h2>Information we collect</h2>
+  <ul>
+    <li><strong>Information you give us</strong> — name, phone, email, project location and details when you submit a form, call, text or email us.</li>
+    <li><strong>Information collected automatically</strong> — device and browser type, pages viewed, referring page, approximate location (city level), and campaign identifiers such as UTM parameters or ad click IDs. We collect this through cookies and similar technologies, subject to your consent choices.</li>
+    <li><strong>Information from third parties</strong> — if you contact us through Google Business Profile, social media or a lead platform, we receive the details you provide there.</li>
+  </ul>
+  <h2>How we use information</h2>
+  <ul>
+    <li>To respond to requests, prepare estimates and deliver construction services.</li>
+    <li>To operate, secure and improve the website and understand which content is useful.</li>
+    <li>To measure and improve our advertising (only if you accept advertising cookies).</li>
+    <li>To comply with legal obligations and enforce our agreements.</li>
+  </ul>
+  <h2>Cookies and tracking</h2>
+  <p>We use Google Consent Mode: optional analytics and advertising cookies stay off until you opt in through our banner, and you can change your choice anytime via “Your Privacy Choices” in the footer. We honor browser Global Privacy Control (GPC) signals as an opt-out of advertising/“sale or sharing.” See our <a href="/cookie-policy">Cookie Policy</a> for details.</p>
+  <h2>Who we share information with</h2>
+  <p>We share information with service providers who help us run our business (website hosting and form handling, analytics, customer-relationship and messaging tools, email), and with subcontractors, suppliers and inspectors as needed to perform your project. <strong>We do not sell your personal information for money.</strong> Where advertising or analytics partners (such as Google or Meta) receive cookie data, that may be considered “sharing” for cross-context behavioral advertising under California law; you can opt out using the footer link or a GPC signal.</p>
+  <h2>Text messages</h2>
+  <p>If you check the box to receive texts, you consent to receive messages about your project from Wayco. Message and data rates may apply; reply STOP to opt out or HELP for help. Consent to text is not a condition of purchase. Mobile information is not shared with third parties for marketing purposes.</p>
+  <h2>Your California privacy rights</h2>
+  <p>California residents may request to know, access, correct or delete personal information we hold, opt out of sale/sharing, and limit use of sensitive information (we do not use sensitive personal information to infer characteristics). We will not discriminate against you for exercising your rights. To make a request, call <a href={site.phoneHref}>{site.phone}</a> or email <a href={`mailto:${site.email}`}>{site.email}</a>. We may need to verify your identity before fulfilling a request.</p>
+  <h2>Data retention and security</h2>
+  <p>We keep information only as long as needed for the purposes above, including project, warranty and legal record-keeping. We use reasonable administrative, technical and physical safeguards, but no method of transmission or storage is completely secure.</p>
+  <h2>Children</h2>
+  <p>Our website is not directed to children under 13 and we do not knowingly collect their information.</p>
+  <h2>Changes to this policy</h2>
+  <p>We may update this policy and will post the new date above.</p>
+  <h2>Contact us</h2>
+  <p>Wayco Construction, Inc.<br />{fullAddress}<br /><a href={site.phoneHref}>{site.phone}</a> · <a href={`mailto:${site.email}`}>{site.email}</a></p>
+</LegalLayout>

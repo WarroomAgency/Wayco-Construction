@@ -1,0 +1,8 @@
+---
+interface Props { text: string; label?: string }
+const { text, label = 'The short answer' } = Astro.props;
+---
+<aside class="rounded-3xl border border-blue/15 bg-blue-soft/60 p-6 sm:p-8" data-answer>
+  <p class="eyebrow mb-3">{label}</p>
+  <p class="font-display text-xl leading-snug text-ink sm:text-2xl">{text}</p>
+</aside>

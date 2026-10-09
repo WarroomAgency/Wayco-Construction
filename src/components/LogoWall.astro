@@ -1,0 +1,10 @@
+---
+import { Image } from 'astro:assets';
+import { partners } from '~/data/team';
+import { partnerLogos } from '~/lib/photos';
+---
+<ul class="flex flex-wrap items-center justify-center gap-x-10 gap-y-6">
+  {partners.map((p) => partnerLogos[p.file] && (
+    <li><Image src={partnerLogos[p.file]} alt={`${p.name} logo`} width={170} class="h-14 w-auto rounded-md opacity-80 grayscale transition hover:opacity-100 hover:grayscale-0" loading="lazy" /></li>
+  ))}
+</ul>

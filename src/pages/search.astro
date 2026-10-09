@@ -1,0 +1,22 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+---
+<BaseLayout title="Search Wayco Construction" description="Search services, projects, guides and areas served by Wayco Construction." path="/search" noindex pagefind={false}>
+  <section class="section min-h-[70vh]">
+    <div class="container-n">
+      <p class="eyebrow mb-3">Search</p>
+      <h1 class="font-display text-display-lg">Search the site</h1>
+      <div id="search" class="mt-8"></div>
+      <noscript><p class="mt-6">Search requires JavaScript. Browse our <a class="underline" href="/services">services</a>, <a class="underline" href="/projects">projects</a> or <a class="underline" href="/blog">blog</a>.</p></noscript>
+    </div>
+  </section>
+  <link slot="head" href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <script is:inline src="/pagefind/pagefind-ui.js" onload="
+    var ui = new PagefindUI({ element: '#search', showSubResults: true, showImages: false, resetStyles: false, translations: { placeholder: 'Search ADUs, kitchens, areas…' } });
+    var q = new URLSearchParams(location.search).get('q'); if (q) ui.triggerSearch(q);
+    document.querySelector('#search input') && document.querySelector('#search input').focus();
+  "></script>
+  <style is:global>
+    #search { --pagefind-ui-primary: #2747b0; --pagefind-ui-text: #0e131d; --pagefind-ui-background: #fff; --pagefind-ui-border: #d9d4c7; --pagefind-ui-tag: #f5f3ee; --pagefind-ui-border-width: 1px; --pagefind-ui-border-radius: 14px; --pagefind-ui-font: 'Inter Variable', system-ui, sans-serif; }
+  </style>
+</BaseLayout>

@@ -1,0 +1,21 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { services } from '~/data/services';
+import { areas } from '~/data/areas';
+import { projects } from '~/data/projects';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog')).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+const cols = [
+  { t: 'Main', l: [['Home', '/'], ['All services', '/services'], ['Projects', '/projects'], ['Google reviews', '/reviews'], ['About', '/about'], ['Meet the team', '/meet-the-team'], ['FAQs', '/faqs'], ['Areas we serve', '/serving-area'], ['Blog', '/blog'], ['Contact', '/contact'], ['Request a consultation', '/request-consultation'], ['Search', '/search']] },
+  { t: 'Services', l: services.map((s) => [s.name, `/${s.slug}`]) },
+  { t: 'Areas', l: areas.map((a) => [`${a.name}, CA`, `/areas/${a.slug}`]) },
+  { t: 'Projects', l: projects.map((p) => [p.name, `/projects/${p.slug}`]) },
+  { t: 'Blog', l: posts.map((p) => [p.data.title, `/blog/${p.id}`]) },
+  { t: 'Legal', l: [['Privacy policy', '/privacy-policy'], ['Terms of use', '/terms'], ['Cookie policy', '/cookie-policy'], ['Accessibility', '/accessibility']] },
+];
+---
+<BaseLayout title="Sitemap" description="Browse every page on the Wayco Construction website: services, projects, service areas, blog guides, reviews and contact information for El Cajon, CA." path="/sitemap" pagefind={false}>
+  <section class="section"><div class="container-x"><h1 class="font-display text-display-lg">Sitemap</h1>
+    <div class="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">{cols.map((c) => <div><h2 class="eyebrow mb-4">{c.t}</h2><ul class="space-y-2">{c.l.map(([n, h]) => <li><a href={h} class="hover:text-blue hover:underline">{n}</a></li>)}</ul></div>)}</div>
+  </div></section>
+</BaseLayout>

@@ -1,0 +1,22 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Icon from '~/components/Icon.astro';
+import { site } from '~/data/site';
+---
+<BaseLayout title="Thank You — We’ll Be in Touch" description="Thanks for contacting Wayco Construction. We’ll be in touch within one business day." path="/thank-you" noindex pagefind={false}>
+  <section class="section min-h-[70vh]">
+    <div class="container-n text-center">
+      <span class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue text-white"><Icon name="check" size={36} /></span>
+      <h1 class="mt-8 font-display text-hero">Thank you — we’ve got it.</h1>
+      <p class="mx-auto mt-5 max-w-xl text-lg text-steel-2">A member of the Wayco team will contact you within one business day (we’re open Mon–Fri, 7:00 AM–3:30 PM). If it’s urgent, call <a class="font-semibold text-ink underline" href={site.phoneHref}>{site.phone}</a>.</p>
+      <div class="mt-10 flex flex-wrap justify-center gap-3"><a href="/projects" class="btn btn-dark">Browse our projects</a><a href="/reviews" class="btn btn-ghost">Read client reviews</a><a href="/blog" class="btn btn-ghost">Read our guides</a></div>
+    </div>
+  </section>
+  <script is:inline>
+    (function () {
+      // Fires once per lead for pages loaded after a successful form POST (conversion page-view event; GTM can trigger on 'lead_thank_you')
+      try { if (sessionStorage.getItem('wayco_lead_pv')) return; sessionStorage.setItem('wayco_lead_pv', '1'); } catch (e) {}
+      (window.dataLayer = window.dataLayer || []).push({ event: 'lead_thank_you', page_type: 'thank_you' });
+    })();
+  </script>
+</BaseLayout>

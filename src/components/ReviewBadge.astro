@@ -1,0 +1,12 @@
+---
+import Icon from './Icon.astro';
+import Stars from './Stars.astro';
+import { site } from '~/data/site';
+interface Props { dark?: boolean; link?: boolean }
+const { dark = false, link = true } = Astro.props;
+const Tag = link ? 'a' : 'div';
+---
+<Tag {...(link ? { href: site.google.reviewsUrl, target: '_blank', rel: 'noopener', 'data-track': 'google-review', 'data-dest': 'badge' } : {})} class:list={['inline-flex items-center gap-3 rounded-full py-2 pl-3 pr-5 ring-1', dark ? 'bg-white/10 text-white ring-white/20 hover:bg-white/15' : 'bg-white text-ink ring-line hover:ring-blue']}>
+  <span class="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-soft"><Icon name="google" size={20} /></span>
+  <span class="flex flex-col leading-tight"><span class="flex items-center gap-1.5 text-sm font-semibold"><span class="text-base">{site.google.rating.toFixed(1)}</span><Stars size={13} /></span><span class:list={['text-[0.78rem]', dark ? 'text-silver' : 'text-steel-2']}>{site.google.reviewCount} Google reviews</span></span>
+</Tag>

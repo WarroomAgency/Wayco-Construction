@@ -1,0 +1,68 @@
+---
+import '~/styles/global.css';
+import Seo from '~/components/Seo.astro';
+import Header from '~/components/Header.astro';
+import Footer from '~/components/Footer.astro';
+import ConsentBanner from '~/components/ConsentBanner.astro';
+import StickyCta from '~/components/StickyCta.astro';
+import Lightbox from '~/components/Lightbox.astro';
+import { site } from '~/data/site';
+import { ids, orgNode, localBusinessNode, websiteNode } from '~/lib/seo';
+import consentBoot from '~/scripts/consent-boot.js?raw';
+import siteJs from '~/scripts/site.js?raw';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  ogPhoto?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  schema?: Record<string, unknown>[];   // extra JSON-LD nodes (merged into one @graph)
+  published?: string;
+  modified?: string;
+  fullTitle?: boolean;
+  preload?: string;
+  lightbox?: boolean;
+  pagefind?: boolean;
+}
+const { title, description, path, ogPhoto, ogType, noindex, schema = [], published, modified, fullTitle, lightbox = false, pagefind = true } = Astro.props;
+const graph = { '@context': 'https://schema.org', '@graph': [orgNode(), localBusinessNode(), websiteNode(), ...schema] };
+---
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0E131D" />
+    <meta name="format-detection" content="telephone=yes" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/images/favicon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="alternate" type="application/rss+xml" title="Wayco Construction Blog" href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <Seo {title} {description} {path} {ogPhoto} {ogType} {noindex} {published} {modified} {fullTitle} />
+    <script is:inline set:html={consentBoot}></script>
+    {site.gtmId && <script is:inline set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${site.gtmId}');`}></script>}
+    {!site.gtmId && site.ga4Id && <>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${site.ga4Id}`}></script>
+      <script is:inline set:html={`gtag('js',new Date());gtag('config','${site.ga4Id}');`}></script>
+    </>}
+    <script type="application/ld+json" set:html={JSON.stringify(graph)}></script>
+    <slot name="head" />
+  </head>
+  <body>
+    {site.gtmId && <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${site.gtmId}`} height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>}
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-ink">Skip to content</a>
+    <Header />
+    <main id="main" data-pagefind-body={pagefind ? '' : undefined}>
+      <slot />
+    </main>
+    <Footer />
+    <StickyCta />
+    <ConsentBanner />
+    {lightbox && <Lightbox />}
+    <script is:inline set:html={siteJs}></script>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+---
+import Photo from './Photo.astro';
+import Icon from './Icon.astro';
+import type { Project } from '~/data/types';
+interface Props { project: Project; big?: boolean }
+const { project, big = false } = Astro.props;
+const cats = [project.category, project.sector].join(' ');
+---
+<a href={`/projects/${project.slug}`} data-cats={cats} class="group relative block overflow-hidden rounded-3xl bg-void text-white shadow-soft">
+  <Photo name={project.hero} alt={`${project.name} — ${project.summary}`} ratio={big ? '4/5' : '4/3'} class="w-full transition duration-700 group-hover:scale-105" sizes={big ? '(min-width:1024px) 40vw, 90vw' : '(min-width:1024px) 30vw, 90vw'} widths={[500, 800, 1200]} />
+  <div class="absolute inset-0 bg-gradient-to-t from-void/90 via-void/20 to-transparent"></div>
+  <div class="absolute inset-x-0 bottom-0 p-6">
+    <p class="text-eyebrow uppercase tracking-widest text-silver">{project.category.replace('-', ' ')}{project.location ? ` · ${project.location}` : ''}</p>
+    <h3 class="mt-1.5 font-display text-2xl leading-tight !text-white">{project.name}</h3>
+    <p class="mt-1 line-clamp-2 text-sm text-silver opacity-0 transition group-hover:opacity-100 max-sm:opacity-100">{project.summary}</p>
+  </div>
+  <span class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 backdrop-blur transition group-hover:bg-blue"><Icon name="arrow-ur" size={18} /></span>
+</a>

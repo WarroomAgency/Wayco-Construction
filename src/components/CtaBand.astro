@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+import { site } from '~/data/site';
+interface Props { title?: string; text?: string; photo?: string; }
+const { title = 'Ready to talk about your project?', text = 'Free consultation. Clear scope, clear schedule, and a team that answers the phone. Most projects start within about four weeks.', photo = 'inc-hero-design-build' } = Astro.props;
+---
+<section class="on-dark relative isolate overflow-hidden bg-void py-20 text-white sm:py-28" data-section="cta-band">
+  <Photo name={photo} alt="" class="absolute inset-0 -z-20 h-full w-full opacity-40" sizes="100vw" widths={[800, 1400, 2000]} />
+  <div class="absolute inset-0 -z-10 bg-gradient-to-r from-void via-void/85 to-void/50"></div>
+  <div class="container-x grid items-center gap-10 lg:grid-cols-[1.4fr_1fr]">
+    <div>
+      <p class="eyebrow mb-4 !text-silver">Let’s build</p>
+      <h2 class="font-display text-display-lg !text-white">{title}</h2>
+      <p class="mt-5 max-w-xl text-lg text-silver">{text}</p>
+    </div>
+    <div class="flex flex-col gap-3 lg:items-end">
+      <a href="/request-consultation" class="btn btn-primary w-full text-base sm:w-auto sm:min-w-[19rem]" data-track="cta" data-loc="cta-band">Request Your Free Consultation <Icon name="arrow" size={18} /></a>
+      <a href={site.phoneHref} class="btn btn-ghost-light w-full sm:w-auto sm:min-w-[19rem]" data-loc="cta-band"><Icon name="phone" size={18} /> Call {site.phone}</a>
+      <p class="text-sm text-silver-2">Mon–Fri · 7:00 AM – 3:30 PM</p>
+    </div>
+  </div>
+</section>

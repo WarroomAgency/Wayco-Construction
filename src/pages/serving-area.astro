@@ -1,0 +1,33 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import AnswerBox from '~/components/AnswerBox.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import Photo from '~/components/Photo.astro';
+import Icon from '~/components/Icon.astro';
+import { areas } from '~/data/areas';
+import { site } from '~/data/site';
+import { breadcrumbNode } from '~/lib/seo';
+---
+<BaseLayout title="Areas We Serve — General Contractor in San Diego County" description="Wayco Construction builds ADUs, remodels and commercial projects across San Diego County from our El Cajon office. See El Cajon, La Mesa, Santee, Poway and more." path="/serving-area" ogPhoto="hero-whole-home-renovation" schema={[breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'Areas We Serve', path: '/serving-area' }])]}>
+  <PageHero eyebrow="Service area" h1="General contractor serving San Diego County" lead="Our office is in El Cajon. Our crews build across East County, the city of San Diego, the South Bay, North County inland and La Jolla." photo="hero-whole-home-renovation" crumbs={[{ name: 'Areas We Serve' }]} />
+  <section class="section">
+    <div class="container-x">
+      <AnswerBox text="Wayco Construction is headquartered at 1069 Graves Ave, Suite 106 in El Cajon, CA and serves San Diego County, including El Cajon, La Mesa, Santee, Lakeside, Spring Valley, Lemon Grove, San Diego, Chula Vista, Poway, La Jolla, Rancho San Diego and Alpine. Call (619) 202-1031 to confirm availability for your address." />
+      <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {areas.map((a) => (
+          <a href={`/areas/${a.slug}`} class="group reveal overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-line/60 transition hover:-translate-y-1 hover:shadow-lift">
+            <Photo name={a.heroPhoto} alt={`Construction and remodeling in ${a.name}, CA`} ratio="16/9" class="w-full transition duration-700 group-hover:scale-105" sizes="(min-width:1024px) 30vw, 90vw" widths={[400, 700, 1000]} />
+            <div class="p-6"><h2 class="font-display text-2xl">{a.name}</h2><p class="mt-2 text-[0.95rem] leading-relaxed text-steel-2">{a.driveFromShop}</p><span class="link-arrow mt-4 text-sm">{a.name} contractor <Icon name="arrow" size={16} /></span></div>
+          </a>
+        ))}
+      </div>
+      <div class="mt-16 grid items-center gap-10 rounded-3xl bg-ink p-8 text-white sm:p-12 lg:grid-cols-2">
+        <div><p class="eyebrow mb-3 !text-silver">Don’t see your city?</p><h2 class="font-display text-display-md !text-white">We work throughout San Diego County.</h2><p class="mt-4 text-silver">Call or send us your address and we’ll tell you honestly whether we can take your project on and when.</p></div>
+        <div class="flex flex-wrap gap-3 lg:justify-end"><a href={site.phoneHref} class="btn btn-primary"><Icon name="phone" size={18} /> {site.phone}</a><a href="/request-consultation" class="btn btn-ghost-light" data-track="cta">Request a consultation</a></div>
+      </div>
+    </div>
+  </section>
+  <CtaBand />
+</BaseLayout>

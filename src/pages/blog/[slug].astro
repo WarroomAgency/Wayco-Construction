@@ -1,0 +1,76 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import Faq from '~/components/Faq.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import Photo from '~/components/Photo.astro';
+import QuoteForm from '~/components/QuoteForm.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import { site } from '~/data/site';
+import { ids, breadcrumbNode, faqNode, abs } from '~/lib/seo';
+
+export const getStaticPaths = (async () => {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}) satisfies GetStaticPaths;
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const d = post.data;
+const all = (await getCollection('blog')).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+const more = all.filter((p) => p.id !== post.id && p.data.category === d.category).concat(all.filter((p) => p.id !== post.id && p.data.category !== d.category)).slice(0, 3);
+const words = (post.body ?? '').split(/\s+/).length;
+const mins = Math.max(3, Math.round(words / 220));
+const url = abs(`/blog/${post.id}`);
+const article = {
+  '@type': 'Article',
+  '@id': `${url}#article`,
+  headline: d.title,
+  description: d.description,
+  datePublished: d.pubDate.toISOString(),
+  dateModified: (d.updatedDate ?? d.pubDate).toISOString(),
+  mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: site.name, url: site.url },
+  publisher: { '@id': ids.org },
+  articleSection: d.category,
+  keywords: d.tags.join(', '),
+  wordCount: words,
+  inLanguage: 'en-US',
+  speakable: { '@type': 'SpeakableSpecification', cssSelector: ['h1', '.prose-wayco > p:first-of-type'] },
+};
+const toc = headings.filter((h) => h.depth === 2);
+const fmt = (x: Date) => x.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+---
+<BaseLayout title={d.title} description={d.description} path={`/blog/${post.id}`} ogPhoto={d.heroPhoto} ogType="article" published={d.pubDate.toISOString()} modified={(d.updatedDate ?? d.pubDate).toISOString()} schema={[article, breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }, { name: d.title, path: `/blog/${post.id}` }]), ...(d.faqs.length ? [faqNode(d.faqs)] : [])]}>
+  <PageHero eyebrow={`${d.category} · ${mins} min read`} h1={d.title} lead={`Updated ${fmt(d.updatedDate ?? d.pubDate)} · By the Wayco Construction team`} photo={d.heroPhoto} photoAlt={d.title} crumbs={[{ name: 'Blog', path: '/blog' }, { name: d.category }]} cta={false} compact />
+  <article class="section">
+    <div class="container-x grid items-start gap-14 lg:grid-cols-[1fr_20rem]">
+      <div class="min-w-0 max-w-3xl">
+        <div class="prose-wayco"><Content /></div>
+        {d.faqs.length > 0 && <div class="mt-16"><Faq faqs={d.faqs} title="Quick answers" eyebrow="FAQ" /></div>}
+        <div class="mt-14 rounded-3xl bg-ink p-8 text-white">
+          <p class="font-display text-2xl !text-white">Talk to a builder, not a call center.</p>
+          <p class="mt-2 text-silver">Free consultation for homeowners and business owners across San Diego County.</p>
+          <div class="mt-5 flex flex-wrap gap-3"><a href="/request-consultation" class="btn btn-primary" data-track="cta" data-loc="blog">Request a consultation</a><a href={site.phoneHref} class="btn btn-ghost-light" data-loc="blog">{site.phone}</a></div>
+        </div>
+      </div>
+      <aside class="space-y-8 lg:sticky lg:top-28">
+        {toc.length > 1 && <nav aria-label="On this page" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-line/60"><p class="eyebrow mb-3">On this page</p><ol class="space-y-2 text-[0.92rem]">{toc.map((h) => <li><a href={`#${h.slug}`} class="text-steel-2 hover:text-blue">{h.text}</a></li>)}</ol></nav>}
+        <QuoteForm id="blog" compact title="Free consultation" sub="Questions about your project? We’re happy to help." />
+      </aside>
+    </div>
+  </article>
+  <section class="section bg-bone-2 pt-14">
+    <div class="container-x"><SectionHead eyebrow="Keep reading" title="More from the Wayco blog" />
+      <div class="mt-10 grid gap-6 md:grid-cols-3">
+        {more.map((m) => (
+          <a href={`/blog/${m.id}`} class="group overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-line/60 transition hover:-translate-y-1 hover:shadow-lift">
+            <Photo name={m.data.heroPhoto} alt="" ratio="16/10" class="w-full transition duration-700 group-hover:scale-105" sizes="(min-width:768px) 30vw, 90vw" widths={[400, 700]} />
+            <div class="p-6"><p class="eyebrow">{m.data.category}</p><h3 class="mt-2 font-display text-xl leading-snug">{m.data.title}</h3></div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

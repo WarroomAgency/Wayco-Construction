@@ -1,0 +1,17 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { services } from '~/data/services';
+import { site } from '~/data/site';
+---
+<BaseLayout title="Page Not Found" description="The page you’re looking for has moved. Explore Wayco Construction’s services, projects and contact options." path="/404" noindex pagefind={false}>
+  <section class="section min-h-[70vh]">
+    <div class="container-n">
+      <p class="eyebrow mb-3">404</p>
+      <h1 class="font-display text-hero">That page has moved.</h1>
+      <p class="mt-5 max-w-xl text-lg text-steel-2">We rebuilt our website — some old links changed. Try one of these, or call us at <a class="font-semibold text-ink underline" href={site.phoneHref}>{site.phone}</a>.</p>
+      <ul class="mt-10 grid gap-3 sm:grid-cols-2">
+        {[{ n: 'Home', h: '/' }, { n: 'All services', h: '/services' }, { n: 'Project portfolio', h: '/projects' }, { n: 'Google reviews', h: '/reviews' }, { n: 'Free consultation', h: '/request-consultation' }, { n: 'Search the site', h: '/search' }, ...services.slice(0, 4).map((s) => ({ n: s.name, h: `/${s.slug}` }))].map((l) => <li><a href={l.h} class="block rounded-2xl bg-white px-5 py-4 font-display text-lg shadow-soft ring-1 ring-line/60 hover:text-blue">{l.n} →</a></li>)}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

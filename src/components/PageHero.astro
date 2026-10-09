@@ -1,0 +1,31 @@
+---
+import Photo from './Photo.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import Icon from './Icon.astro';
+import { site } from '~/data/site';
+interface Props {
+  eyebrow?: string; h1: string; lead?: string; photo: string; photoAlt?: string;
+  crumbs?: { name: string; path?: string }[]; cta?: boolean; secondaryHref?: string; secondaryLabel?: string; compact?: boolean; chips?: string[];
+}
+const { eyebrow, h1, lead, photo, photoAlt = '', crumbs = [], cta = true, secondaryHref, secondaryLabel, compact = false, chips = [] } = Astro.props;
+---
+<section class="on-dark relative isolate overflow-hidden bg-void text-white" data-section="hero">
+  <Photo name={photo} alt={photoAlt} class="absolute inset-0 -z-20 h-full w-full" sizes="100vw" widths={[800, 1200, 1800, 2200]} priority />
+  <div class="absolute inset-0 -z-10 bg-gradient-to-r from-void via-void/80 to-void/25"></div>
+  <div class="absolute inset-0 -z-10 bg-gradient-to-t from-void/80 via-transparent to-void/30"></div>
+  <div class:list={['container-x', compact ? 'py-14 sm:py-20' : 'py-20 sm:py-28 lg:py-32']}>
+    {crumbs.length > 0 && <div class="mb-8"><Breadcrumbs crumbs={crumbs} dark /></div>}
+    <div class="max-w-3xl">
+      {eyebrow && <p class="eyebrow mb-5 !text-silver">{eyebrow}</p>}
+      <h1 class="font-display text-hero !text-white">{h1}</h1>
+      {lead && <p class="mt-6 max-w-2xl text-lg leading-relaxed text-silver sm:text-xl">{lead}</p>}
+      {cta && (
+        <div class="mt-9 flex flex-wrap gap-3">
+          <a href="/request-consultation" class="btn btn-primary" data-track="cta" data-loc="hero">Get a Free Consultation <Icon name="arrow" size={18} /></a>
+          {secondaryHref ? <a href={secondaryHref} class="btn btn-ghost-light" data-track="cta" data-loc="hero">{secondaryLabel}</a> : <a href={site.phoneHref} class="btn btn-ghost-light" data-loc="hero"><Icon name="phone" size={18} /> {site.phone}</a>}
+        </div>
+      )}
+      {chips.length > 0 && <ul class="mt-8 flex flex-wrap gap-2">{chips.map((c) => <li class="flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1.5 text-[0.82rem] text-white ring-1 ring-white/15 backdrop-blur"><Icon name="check" size={14} class="text-blue-hi" />{c}</li>)}</ul>}
+    </div>
+  </div>
+</section>

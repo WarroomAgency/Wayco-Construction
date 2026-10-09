@@ -1,0 +1,29 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import ServiceCard from '~/components/ServiceCard.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import AnswerBox from '~/components/AnswerBox.astro';
+import { residential, commercial, process, services } from '~/data/services';
+import { breadcrumbNode, abs, ids } from '~/lib/seo';
+const list = { '@type': 'ItemList', itemListElement: services.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(`/${s.slug}`), name: s.name })) };
+const groups = [
+  { id: 'residential', eyebrow: 'Residential', title: 'For homeowners', text: 'ADUs, remodels, additions and custom homes — planned and built with a single point of contact.', items: residential },
+  { id: 'commercial', eyebrow: 'Commercial', title: 'For owners, operators & developers', text: 'Tenant improvements, hospitality and gaming, multi-family and ground-up commercial construction.', items: commercial },
+  { id: 'process', eyebrow: 'How we build', title: 'Design, planning & management', text: 'The services that keep projects on schedule and on budget — available on their own or bundled into design-build.', items: process },
+];
+---
+<BaseLayout title="Construction Services in El Cajon & San Diego County" description="ADUs, kitchen and bath remodels, whole-home renovations, custom homes, tenant improvements and commercial construction from Wayco Construction in El Cajon, CA." path="/services" ogPhoto="inc-hero-design-build" schema={[breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'Services', path: '/services' }]), list]}>
+  <PageHero eyebrow="Services" h1="Construction services for San Diego County" lead="One design-build team for ADUs, remodels, new construction and commercial projects — with permits handled and a 1-year workmanship warranty." photo="inc-hero-design-build" crumbs={[{ name: 'Services' }]} />
+  <section class="section pb-0"><div class="container-n"><AnswerBox text="Wayco Construction offers residential, commercial and design-build services from El Cajon, CA: ADU construction, kitchen and bathroom remodeling, whole-home renovation, home additions, custom homes, tenant improvements, hospitality and multi-family construction, plus design, planning and construction management." /></div></section>
+  {groups.map((g) => (
+    <section class="section" id={g.id}>
+      <div class="container-x">
+        <SectionHead eyebrow={g.eyebrow} title={g.title} text={g.text} />
+        <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{g.items.map((s) => <div class="reveal"><ServiceCard service={s} /></div>)}</div>
+      </div>
+    </section>
+  ))}
+  <CtaBand />
+</BaseLayout>

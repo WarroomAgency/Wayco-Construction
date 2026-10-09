@@ -1,0 +1,8 @@
+---
+import Icon from './Icon.astro';
+import { site } from '~/data/site';
+---
+<div class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-white/10 bg-void/95 p-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden no-print" data-pagefind-ignore data-section="sticky-bar">
+  <a href={site.phoneHref} class="btn btn-ghost-light !py-3"><Icon name="phone" size={18} /> Call Now</a>
+  <a href="/request-consultation" data-track="cta" class="btn btn-primary !py-3">Free Consultation</a>
+</div>

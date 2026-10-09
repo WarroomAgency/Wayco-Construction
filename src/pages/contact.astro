@@ -1,0 +1,42 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import QuoteForm from '~/components/QuoteForm.astro';
+import Icon from '~/components/Icon.astro';
+import ReviewBadge from '~/components/ReviewBadge.astro';
+import { site, fullAddress } from '~/data/site';
+import { breadcrumbNode, ids } from '~/lib/seo';
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Wayco Construction, Inc. ' + fullAddress)}&output=embed`;
+const page = { '@type': 'ContactPage', '@id': `${site.url}/contact#webpage`, url: `${site.url}/contact`, name: 'Contact Wayco Construction', about: { '@id': ids.business }, mainEntity: { '@id': ids.business } };
+const items = [
+  { icon: 'phone', l: 'Call or text', v: site.phone, h: site.phoneHref },
+  { icon: 'mail', l: 'Email', v: site.email, h: `mailto:${site.email}` },
+  { icon: 'pin', l: 'Office & showroom', v: `${site.address.street}, ${site.address.city}, ${site.address.region} ${site.address.zip}`, h: site.google.mapsUrl },
+  { icon: 'clock', l: 'Hours', v: 'Mon–Fri · 7:00 AM – 3:30 PM · Closed weekends', h: '' },
+];
+---
+<BaseLayout title="Contact Wayco Construction — El Cajon, CA" description="Call (619) 202-1031 or request a free consultation. Wayco Construction, 1069 Graves Ave Suite 106, El Cajon, CA 92021. Mon–Fri 7:00 AM–3:30 PM." path="/contact" ogPhoto="inc-hero-design-and-planning" schema={[page, breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }])]}>
+  <PageHero eyebrow="Contact" h1="Let’s talk about your project" lead="Call, text or send a note. A real person — usually within one business day — will get back to you." photo="inc-hero-design-and-planning" crumbs={[{ name: 'Contact' }]} cta={false} compact />
+  <section class="section">
+    <div class="container-x grid items-start gap-12 lg:grid-cols-[1fr_1.1fr]">
+      <div class="space-y-6">
+        <ul class="space-y-4">
+          {items.map((i) => (
+            <li class="flex gap-4 rounded-3xl bg-white p-6 shadow-soft ring-1 ring-line/60">
+              <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-soft text-blue"><Icon name={i.icon} size={22} /></span>
+              <div><p class="eyebrow">{i.l}</p>{i.h ? <a href={i.h} class="mt-1 block font-display text-xl hover:text-blue" data-loc="contact" data-track={i.icon === 'pin' ? 'directions' : undefined} target={i.icon === 'pin' ? '_blank' : undefined} rel={i.icon === 'pin' ? 'noopener' : undefined}>{i.v}</a> : <p class="mt-1 font-display text-xl">{i.v}</p>}</div>
+            </li>
+          ))}
+        </ul>
+        <p class="text-[0.92rem] text-steel-2">Showroom visits are by appointment only — and showroom customers get discounts on materials. Call ahead and we’ll have a team member ready for you.</p>
+        <div class="relative aspect-[4/3] overflow-hidden rounded-3xl bg-ink ring-1 ring-line/60">
+          <button type="button" data-load-map data-src={mapSrc} class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-ink to-steel text-white">
+            <Icon name="pin" size={34} class="text-blue-hi" /><span class="font-display text-xl">Load interactive map</span><span class="text-sm text-silver">Loads Google Maps — click to continue</span>
+          </button>
+        </div>
+        <div class="flex flex-wrap gap-3"><a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(fullAddress)}`} target="_blank" rel="noopener" class="btn btn-dark" data-track="directions">Get directions <Icon name="arrow-ur" size={16} /></a><ReviewBadge /></div>
+      </div>
+      <QuoteForm id="contact" title="Send us a message" sub="Tell us a little about your project and the best way to reach you." />
+    </div>
+  </section>
+</BaseLayout>

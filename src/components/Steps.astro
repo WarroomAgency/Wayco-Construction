@@ -1,0 +1,13 @@
+---
+interface Props { steps: { title: string; text: string }[]; dark?: boolean }
+const { steps, dark = false } = Astro.props;
+---
+<ol class:list={['grid gap-4 sm:grid-cols-2', steps.length % 4 === 0 ? 'lg:grid-cols-4' : 'lg:grid-cols-3']}>
+  {steps.map((s, i) => (
+    <li class:list={['reveal relative rounded-3xl p-7', dark ? 'bg-white/[.06] ring-1 ring-white/10' : 'bg-white shadow-soft ring-1 ring-line/60']}>
+      <span class:list={['font-display text-5xl leading-none', dark ? 'text-blue-hi' : 'text-blue/25']}>{String(i + 1).padStart(2, '0')}</span>
+      <h3 class:list={['mt-4 font-display text-xl', dark && '!text-white']}>{s.title}</h3>
+      <p class:list={['mt-2 leading-relaxed', dark ? 'text-silver' : 'text-steel-2']}>{s.text}</p>
+    </li>
+  ))}
+</ol>

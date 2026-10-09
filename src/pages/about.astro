@@ -1,0 +1,59 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import AnswerBox from '~/components/AnswerBox.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import Photo from '~/components/Photo.astro';
+import Icon from '~/components/Icon.astro';
+import ReviewBadge from '~/components/ReviewBadge.astro';
+import LogoWall from '~/components/LogoWall.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import { team } from '~/data/team';
+import { site } from '~/data/site';
+import { breadcrumbNode } from '~/lib/seo';
+const values = [
+  { icon: 'users', t: 'Communication first', d: 'Reviewers mention it again and again: you’ll know the schedule, the next decision and who to call. Billie, Josh and your superintendent keep you in the loop.' },
+  { icon: 'ruler', t: 'Design-build accountability', d: 'Design, engineering, permitting and construction under one contract means one team owns the outcome — start to finish.' },
+  { icon: 'hammer', t: 'Craft over shortcuts', d: 'From waterproofing behind tile to the finish on a cabinet door, we build the parts you won’t see as carefully as the parts you will.' },
+  { icon: 'shield', t: 'We stand behind the work', d: 'Every project carries a 1-year workmanship warranty, and past clients tell us how quickly we respond when they call.' },
+];
+const lead = team[0];
+---
+<BaseLayout title="About Wayco Construction — Family-Owned Design-Build Contractor" description="Meet Wayco Construction, a family-owned design-build general contractor in El Cajon, CA with 25+ years of leadership experience in residential and commercial construction." path="/about" ogPhoto="inc-hero-design-build" schema={[breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }])]}>
+  <PageHero eyebrow="About Wayco" h1="A family-owned builder with commercial-grade discipline" lead="We bring the process, scheduling and quality control of large commercial work to the homes and businesses of San Diego County." photo="inc-hero-design-build" crumbs={[{ name: 'About' }]} />
+  <section class="section">
+    <div class="container-x grid items-center gap-14 lg:grid-cols-2">
+      <div class="space-y-6">
+        <AnswerBox label="In short" text="Wayco Construction, Inc. is a family-owned, locally operated design-build general contractor in El Cajon, California. Our leadership brings more than 25 years of construction experience across residential remodels, ADUs, multi-family, casinos, hotels, airports and medical offices — delivered with a 1-year workmanship warranty." />
+        <div class="space-y-5 text-lg leading-relaxed text-steel">
+          <p>Wayco provides design-build services for residential, multi-family and commercial customers: interior remodels, renovations, repairs and upgrades, custom home building and new construction throughout San Diego County.</p>
+          <p>What sets us apart is how we run a job. Our team has managed large, complex commercial projects where schedules, safety and budgets are non-negotiable — and we run every home project the same way. Estimates are written. Schedules are real. Permits are handled. Questions get answered.</p>
+          <p>Our office and showroom are at 1069 Graves Avenue in El Cajon. Showroom visits are by appointment, and showroom customers get discounts on materials.</p>
+        </div>
+        <ReviewBadge />
+      </div>
+      <div class="relative"><Photo name="residential-hero" alt="Bathroom remodel by Wayco Construction" ratio="4/5" class="w-full rounded-[2rem]" sizes="(min-width:1024px) 45vw, 90vw" widths={[500, 800, 1100]} /></div>
+    </div>
+  </section>
+  <section class="on-dark bg-void py-20 text-white sm:py-28">
+    <div class="container-x">
+      <SectionHead dark eyebrow="How we work" title="Four commitments behind every project" />
+      <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{values.map((v) => <div class="reveal rounded-3xl bg-white/[.06] p-7 ring-1 ring-white/10"><span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue text-white"><Icon name={v.icon} size={22} /></span><h3 class="mt-5 font-display text-xl !text-white">{v.t}</h3><p class="mt-2 leading-relaxed text-silver">{v.d}</p></div>)}</div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container-x">
+      <div class="flex flex-wrap items-end justify-between gap-6"><SectionHead eyebrow="Leadership" title="The people you’ll actually work with" /><a href="/meet-the-team" class="link-arrow">Meet the full team <Icon name="arrow" size={16} /></a></div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {team.slice(0, 3).map((m) => (
+          <div class="reveal overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-line/60">
+            <Photo name={m.photo} alt={`${m.name}, ${m.role} at Wayco Construction`} ratio="4/4.3" class="w-full" sizes="(min-width:1024px) 30vw, 90vw" widths={[400, 700, 1000]} position="top" />
+            <div class="p-6"><h3 class="font-display text-xl">{m.name}</h3><p class="text-sm font-semibold text-blue">{m.role}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="section bg-bone-2 py-14"><div class="container-x"><p class="eyebrow mb-8 text-center">Trusted material &amp; building partners</p><LogoWall /></div></section>
+  <CtaBand title="Let’s build something together" />
+</BaseLayout>

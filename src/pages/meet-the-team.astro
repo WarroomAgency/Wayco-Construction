@@ -1,0 +1,27 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import Photo from '~/components/Photo.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import Icon from '~/components/Icon.astro';
+import { team } from '~/data/team';
+import { site } from '~/data/site';
+import { breadcrumbNode, ids, abs } from '~/lib/seo';
+const people = team.map((m) => ({ '@type': 'Person', name: m.name, jobTitle: m.role, worksFor: { '@id': ids.org }, description: m.bio }));
+---
+<BaseLayout title="Meet the Team — Wayco Construction, El Cajon" description="Meet the Wayco Construction team: President Josh Coit, Operations Manager Frank Coit, project managers and superintendents with decades of construction experience." path="/meet-the-team" ogPhoto="josh-coit" schema={[...people, breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }, { name: 'Meet the Team', path: '/meet-the-team' }])]}>
+  <PageHero eyebrow="Our team" h1="Meet the people behind your project" lead="Decades of combined experience in design-build, construction management and field supervision — and a front office that returns your calls." photo="inc-hero-construction-management-services" crumbs={[{ name: 'About', path: '/about' }, { name: 'Meet the Team' }]} cta={false} />
+  <section class="section">
+    <div class="container-x">
+      <div class="grid gap-14">
+        {team.map((m, i) => (
+          <article class:list={['reveal grid items-center gap-8 lg:grid-cols-[22rem_1fr] lg:gap-14', i % 2 && 'lg:[direction:rtl] lg:[&>*]:[direction:ltr]']}>
+            <Photo name={m.photo} alt={`${m.name}, ${m.role} at Wayco Construction`} ratio="4/5" class="w-full max-w-sm rounded-[2rem]" sizes="(min-width:1024px) 22rem, 80vw" widths={[400, 700, 900]} position="top" />
+            <div><p class="eyebrow">{m.role}</p><h2 class="mt-2 font-display text-display-md">{m.name}</h2><p class="mt-5 max-w-2xl text-lg leading-relaxed text-steel">{m.bio}</p></div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+  <CtaBand title="Work with a team you can trust" />
+</BaseLayout>

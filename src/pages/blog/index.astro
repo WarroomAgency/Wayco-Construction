@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import Photo from '~/components/Photo.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import { breadcrumbNode, abs } from '~/lib/seo';
+const posts = (await getCollection('blog')).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+const [first, ...rest] = posts;
+const fmt = (x: Date) => x.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
+const list = { '@type': 'Blog', name: 'Wayco Construction Blog', url: abs('/blog'), blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.data.title, url: abs(`/blog/${p.id}`), datePublished: p.data.pubDate.toISOString() })) };
+---
+<BaseLayout title="Blog — ADU, Remodeling & Construction Guides for San Diego" description="Practical guides on ADU costs and timelines, kitchen and bathroom remodeling, design-build and hiring a contractor in San Diego County — from Wayco Construction." path="/blog" ogPhoto="model-e-adu-gallery-02" schema={[list, breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }])]}>
+  <PageHero eyebrow="Guides & insights" h1="Construction guides for San Diego homeowners and business owners" lead="Straight answers on ADUs, remodels, permits, budgets and working with a contractor — written by the team that builds them." photo="walker-adu-gallery-01" crumbs={[{ name: 'Blog' }]} cta={false} compact />
+  <section class="section">
+    <div class="container-x">
+      {first && (
+        <a href={`/blog/${first.id}`} class="group grid overflow-hidden rounded-[2rem] bg-white shadow-soft ring-1 ring-line/60 transition hover:shadow-lift lg:grid-cols-2">
+          <Photo name={first.data.heroPhoto} alt="" ratio="16/11" class="h-full w-full transition duration-700 group-hover:scale-105" sizes="(min-width:1024px) 50vw, 100vw" widths={[600, 1000, 1400]} />
+          <div class="flex flex-col justify-center p-8 sm:p-12"><p class="eyebrow">{first.data.category} · {fmt(first.data.pubDate)}</p><h2 class="mt-3 font-display text-display-md">{first.data.title}</h2><p class="mt-4 text-lg leading-relaxed text-steel-2">{first.data.description}</p><span class="link-arrow mt-6">Read the guide</span></div>
+        </a>
+      )}
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {rest.map((p) => (
+          <a href={`/blog/${p.id}`} class="group flex flex-col overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-line/60 transition hover:-translate-y-1 hover:shadow-lift">
+            <Photo name={p.data.heroPhoto} alt="" ratio="16/10" class="w-full transition duration-700 group-hover:scale-105" sizes="(min-width:1024px) 30vw, 90vw" widths={[400, 700, 1000]} />
+            <div class="flex flex-1 flex-col p-6"><p class="eyebrow">{p.data.category} · {fmt(p.data.pubDate)}</p><h3 class="mt-2 font-display text-xl leading-snug">{p.data.title}</h3><p class="mt-3 flex-1 text-[0.95rem] leading-relaxed text-steel-2">{p.data.description}</p></div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+  <CtaBand />
+</BaseLayout>
