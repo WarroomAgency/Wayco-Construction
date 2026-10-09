@@ -1,4 +1,5 @@
 import { site, fullAddress, allProfiles } from '~/data/site';
+import { services } from '~/data/services';
 
 export const abs = (path = '/') => (/^https?:/.test(path) ? path : `${site.url}${path === '/' ? '' : path}`);
 export const clamp = (s: string, n: number) => (s.length <= n ? s : s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…');
@@ -43,6 +44,11 @@ export function localBusinessNode() {
     paymentAccepted: 'Check, Credit Card, Bank Transfer',
     currenciesAccepted: 'USD',
     sameAs: allProfiles,
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Construction services',
+      itemListElement: services.map((sv) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: sv.name, url: abs(`/${sv.slug}`) } })),
+    },
     knowsAbout: ['ADU construction', 'Kitchen remodeling', 'Bathroom remodeling', 'Whole-home renovation', 'Design-build', 'Tenant improvement', 'Commercial construction', 'Construction management'],
     slogan: 'Design-build general contractor serving San Diego County',
     founder: { '@type': 'Person', name: 'Josh Coit', jobTitle: 'President' },

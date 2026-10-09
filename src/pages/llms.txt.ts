@@ -37,6 +37,7 @@ ${projects.map((p) => `- [${p.name}](${u('/projects/' + p.slug)}): ${p.summary}`
 ${posts.map((p) => `- [${p.data.title}](${u('/blog/' + p.id)}): ${p.data.description}`).join('\n')}
 
 ## Company
+- Full reference for AI assistants: ${u("/llms-full.txt")}
 - [About](${u('/about')}) · [Meet the team](${u('/meet-the-team')}) · [Reviews](${u('/reviews')}) · [FAQs](${u('/faqs')}) · [Contact](${u('/contact')}) · [Request a free consultation](${u('/request-consultation')})
 `;
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });

@@ -316,7 +316,7 @@ export const commercialServices: Service[] = [
       { title: 'Construction documents', text: 'Detailed drawings and specifications prepared for permit and construction, coordinated with engineers where required.' },
       { title: 'Value engineering during design', text: 'We look for savings in materials, systems and sequencing before they become change orders.' },
       { title: 'Permitting and agency coordination', text: 'We handle all required permitting and respond to plan-check comments directly with the agency.' },
-      { title: 'Guaranteed scope, single contract', text: 'You sign one agreement for design and construction, with a clear scope, schedule and price basis.' },
+      { title: 'Defined scope, single contract', text: 'You sign one agreement for design and construction, with a clear scope, schedule and price basis.' },
       { title: 'Construction and site management', text: 'Superintendents run the site, project managers handle communication, and the design team stays involved for field questions.' },
       { title: 'Closeout and workmanship warranty', text: 'Punch list, final inspections and a 1-year workmanship warranty on our work.' },
     ],

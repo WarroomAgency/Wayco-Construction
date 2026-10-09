@@ -55,10 +55,10 @@ const fmt = (x: Date) => x.toLocaleDateString('en-US', { year: 'numeric', month:
           <div class="mt-5 flex flex-wrap gap-3"><a href="/request-consultation" class="btn btn-primary" data-track="cta" data-loc="blog">Request a consultation</a><a href={site.phoneHref} class="btn btn-ghost-light" data-loc="blog">{site.phone}</a></div>
         </div>
       </div>
-      <aside class="space-y-8 lg:sticky lg:top-28">
+      <div class="space-y-8 lg:sticky lg:top-28">
         {toc.length > 1 && <nav aria-label="On this page" class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-line/60"><p class="eyebrow mb-3">On this page</p><ol class="space-y-2 text-[0.92rem]">{toc.map((h) => <li><a href={`#${h.slug}`} class="text-steel-2 hover:text-blue">{h.text}</a></li>)}</ol></nav>}
         <QuoteForm id="blog" compact title="Free consultation" sub="Questions about your project? We’re happy to help." />
-      </aside>
+      </div>
     </div>
   </article>
   <section class="section bg-bone-2 pt-14">

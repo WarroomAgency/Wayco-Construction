@@ -90,7 +90,7 @@
   /* ---------- Mobile nav ---------- */
   var nav = document.getElementById('mobile-nav'), burger = document.getElementById('nav-toggle');
   if (nav && burger) {
-    var setNav = function (open) { nav.hidden = !open; burger.setAttribute('aria-expanded', open); document.body.style.overflow = open ? 'hidden' : ''; };
+    var setNav = function (open) { nav.hidden = !open; burger.setAttribute('aria-expanded', open); burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); document.body.style.overflow = open ? 'hidden' : ''; };
     burger.addEventListener('click', function () { setNav(nav.hidden); });
     nav.addEventListener('click', function (e) { if (e.target.closest('a')) setNav(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });

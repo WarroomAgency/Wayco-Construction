@@ -18,6 +18,9 @@ import { services, serviceBySlug } from '~/data/services';
 import { projectBySlug } from '~/data/projects';
 import { reviews, featuredReviews } from '~/data/reviews';
 import { site } from '~/data/site';
+import { getCollection } from 'astro:content';
+import { guidesByService } from '~/data/guides';
+import Photo from '~/components/Photo.astro';
 import { ids, breadcrumbNode, faqNode, abs } from '~/lib/seo';
 
 export const getStaticPaths = (() => services.map((service) => ({ params: { slug: service.slug }, props: { service } }))) satisfies GetStaticPaths;
@@ -36,6 +39,8 @@ const pool = [...revs, ...featuredReviews.filter((r) => !revs.includes(r))].slic
 const projs = s.relatedProjects.map((p) => projectBySlug[p]).filter(Boolean).slice(0, 3);
 const related = s.relatedServices.map((r) => serviceBySlug[r]).filter(Boolean).slice(0, 3);
 
+const allPosts = await getCollection('blog');
+const guides = (guidesByService[s.slug] ?? []).map((g) => allPosts.find((p) => p.id === g)).filter(Boolean);
 const url = abs(`/${s.slug}`);
 const serviceNode = {
   '@type': 'Service',
@@ -65,7 +70,7 @@ const crumbs = [{ name: 'Home', path: '/' }, { name: 'Services', path: '/service
         </div>
         <ReviewBadge />
       </div>
-      <aside class="lg:sticky lg:top-28"><QuoteForm id="svc" service={s.slug} compact title={`Start your ${s.name.toLowerCase()} project`} /></aside>
+      <div class="lg:sticky lg:top-28"><QuoteForm id="svc" service={s.slug} compact title={`Start your ${s.name.toLowerCase()} project`} /></div>
     </div>
   </section>
 
@@ -143,7 +148,17 @@ const crumbs = [{ name: 'Home', path: '/' }, { name: 'Services', path: '/service
     </div>
   </section>
 
-  <section class="section" data-section="faq"><div class="container-n"><Faq faqs={s.faqs} title={`${s.name}: your questions answered`} /></div></section>
+  <section class="section" data-section="faq"><div class="container-n"><Faq faqs={s.faqs} title={`${s.name}: your questions answered`} /><p class="mt-6 text-center"><a href="/faqs" class="link-arrow">More questions? See all FAQs <Icon name="arrow" size={16} /></a></p></div></section>
+
+  {guides.length > 0 && (
+    <section class="section" data-section="guides">
+      <div class="container-x"><SectionHead eyebrow="Helpful guides" title={`Read before you build: ${s.name.toLowerCase()}`} />
+        <div class="mt-10 grid gap-6 md:grid-cols-3">{guides.map((g) => (
+          <a href={`/blog/${g!.id}`} class="group overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-line/60 transition hover:-translate-y-1 hover:shadow-lift"><Photo name={g!.data.heroPhoto} alt="" ratio="16/10" class="w-full transition duration-700 group-hover:scale-105" sizes="(min-width:768px) 30vw, 90vw" widths={[400, 700]} /><div class="p-6"><p class="eyebrow">{g!.data.category}</p><h3 class="mt-2 font-display text-xl leading-snug">{g!.data.title}</h3></div></a>
+        ))}</div>
+      </div>
+    </section>
+  )}
 
   {related.length > 0 && (
     <section class="section bg-bone-2 pt-16">

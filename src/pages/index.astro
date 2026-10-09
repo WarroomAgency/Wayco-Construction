@@ -72,21 +72,20 @@ const video = {
 >
   <!-- HERO -->
   <section class="on-dark relative isolate overflow-hidden bg-void text-white" data-section="hero">
-    <video class="absolute inset-0 -z-20 h-full w-full object-cover opacity-90" autoplay muted loop playsinline preload="metadata" poster="/images/video-poster.jpg" aria-hidden="true" id="hero-video">
-      <source src="/video/wayco-reel.mp4" type="video/mp4" />
-    </video>
+    <Photo name="inc-video" alt="" class="absolute inset-0 -z-20 h-full w-full" sizes="100vw" widths={[640, 960, 1400, 1920]} priority />
+    <video class="absolute inset-0 -z-20 h-full w-full object-cover opacity-0 transition-opacity duration-1000" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" id="hero-video" data-src="/video/wayco-reel.mp4"></video>
     <div class="absolute inset-0 -z-10 bg-gradient-to-r from-void/95 via-void/70 to-void/20"></div>
     <div class="absolute inset-0 -z-10 bg-gradient-to-t from-void/80 via-transparent to-void/30"></div>
-    <div class="container-x grid items-center gap-12 py-16 sm:py-24 lg:grid-cols-[1.25fr_1fr] lg:py-28">
+    <div class="container-x grid items-center gap-12 py-10 sm:py-24 lg:grid-cols-[1.25fr_1fr] lg:py-28">
       <div class="animate-fade-up">
-        <div class="flex flex-wrap items-center gap-3"><ReviewBadge dark /><span class="rounded-full bg-white/10 px-4 py-2 text-[0.82rem] text-silver ring-1 ring-white/15">Family-owned · El Cajon, CA</span></div>
-        <h1 class="mt-7 font-display text-hero !text-white">Design-build contractor for San Diego County homes &amp; businesses.</h1>
-        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-silver sm:text-xl">ADUs, kitchen and bath remodels, whole-home renovations, custom homes and commercial build-outs — designed, permitted and built by one accountable team, backed by a 1-year workmanship warranty.</p>
-        <div class="mt-9 flex flex-wrap gap-3">
+        <div class="flex flex-wrap items-center gap-3"><ReviewBadge dark /><span class="hidden rounded-full bg-white/10 px-4 py-2 text-[0.82rem] text-silver ring-1 ring-white/15 sm:inline">Family-owned · El Cajon, CA</span></div>
+        <h1 class="mt-5 font-display text-hero !text-white sm:mt-7">Design-build contractor for San Diego County homes &amp; businesses.</h1>
+        <p class="mt-4 max-w-2xl text-base leading-relaxed text-silver sm:mt-6 sm:text-xl">ADUs, kitchen and bath remodels, whole-home renovations, custom homes and commercial build-outs — designed, permitted and built by one accountable team, backed by a 1-year workmanship warranty.</p>
+        <div class="mt-6 flex flex-wrap gap-3 sm:mt-9">
           <a href="/request-consultation" class="btn btn-primary text-base" data-track="cta" data-loc="hero">Get a Free Consultation <Icon name="arrow" size={18} /></a>
           <a href="/projects" class="btn btn-ghost-light text-base" data-track="cta" data-loc="hero">See Our Work</a>
         </div>
-        <ul class="mt-9 flex flex-wrap gap-x-7 gap-y-3 text-[0.92rem] text-silver">
+        <ul class="mt-6 flex flex-wrap gap-x-7 sm:mt-9 gap-y-3 text-[0.92rem] text-silver">
           {['Permits handled', 'Free consultations', 'Projects typically start within ~4 weeks'].map((t) => <li class="flex items-center gap-2"><Icon name="check" size={16} class="text-blue-hi" />{t}</li>)}
         </ul>
       </div>
@@ -218,10 +217,13 @@ const video = {
   <CtaBand />
 
   <script is:inline>
+    // Hero reel only on desktop-class connections; mobile / reduced-motion / data-saver keep the optimized still (faster LCP, ~6 MB saved).
     (function () {
       var v = document.getElementById('hero-video'); if (!v) return;
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches, save = navigator.connection && navigator.connection.saveData;
-      if (reduce || save) { v.removeAttribute('autoplay'); v.pause(); v.querySelectorAll('source').forEach(function (s) { s.remove(); }); v.load(); }
+      var ok = window.matchMedia('(min-width: 1024px)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && (navigator.connection.saveData || /2g/.test(navigator.connection.effectiveType || '')));
+      if (!ok) return;
+      var start = function () { v.src = v.getAttribute('data-src'); v.addEventListener('playing', function () { v.style.opacity = '0.9'; }, { once: true }); v.play().catch(function () {}); };
+      if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 2500 }); else setTimeout(start, 1200);
     })();
   </script>
 </BaseLayout>

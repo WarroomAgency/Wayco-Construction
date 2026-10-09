@@ -13,10 +13,15 @@ import Icon from '~/components/Icon.astro';
 import { areas } from '~/data/areas';
 import { serviceBySlug } from '~/data/services';
 import { breadcrumbNode, faqNode, abs, ids } from '~/lib/seo';
+import { getCollection } from 'astro:content';
+import { areaGuides } from '~/data/guides';
+import Photo from '~/components/Photo.astro';
 export const getStaticPaths = (() => areas.map((area) => ({ params: { slug: area.slug }, props: { area } }))) satisfies GetStaticPaths;
 const { area: a } = Astro.props;
 const svcs = a.topServices.map((s) => serviceBySlug[s]).filter(Boolean);
 const near = a.nearby.map((n) => areas.find((x) => x.slug === n)).filter(Boolean);
+const allPosts = await getCollection('blog');
+const guides = areaGuides.map((g) => allPosts.find((p) => p.id === g)).filter(Boolean);
 const url = abs(`/areas/${a.slug}`);
 const svcNode = { '@type': 'Service', '@id': `${url}#service`, name: `General contractor services in ${a.name}, CA`, serviceType: 'General contractor', provider: { '@id': ids.business }, areaServed: { '@type': 'City', name: a.name, ...(a.geo ? { geo: { '@type': 'GeoCoordinates', latitude: a.geo.lat, longitude: a.geo.lng } } : {}), containedInPlace: { '@type': 'AdministrativeArea', name: `${a.county}, CA` } }, url };
 const page = { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: a.seoTitle, description: a.metaDescription, isPartOf: { '@id': ids.site }, speakable: { '@type': 'SpeakableSpecification', cssSelector: ['[data-answer]', 'h1'] } };
@@ -32,13 +37,14 @@ const page = { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: a.seoTitl
         <div><h2 class="font-display text-2xl">Neighborhoods we serve in {a.name}</h2><ul class="mt-4 flex flex-wrap gap-2">{a.neighborhoods.map((n) => <li class="flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[0.92rem] shadow-soft ring-1 ring-line/60"><Icon name="pin" size={14} class="text-blue" />{n}</li>)}</ul></div>
         <ReviewBadge />
       </div>
-      <aside class="lg:sticky lg:top-28"><QuoteForm id="area" compact title={`Start your ${a.name} project`} /></aside>
+      <div class="lg:sticky lg:top-28"><QuoteForm id="area" compact title={`Start your ${a.name} project`} /></div>
     </div>
   </section>
   <section class="section bg-bone-2" data-section="services">
     <div class="container-x"><SectionHead eyebrow={`Popular in ${a.name}`} title={`Services for ${a.name} homes and businesses`} /><div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{svcs.map((s) => <div class="reveal"><ServiceCard service={s} /></div>)}</div></div>
   </section>
   <section class="section"><div class="container-n"><Faq faqs={a.localFaqs} title={`Building in ${a.name}: your questions`} eyebrow={`${a.name} FAQ`} /></div></section>
+  <section class="section" data-section="guides"><div class="container-x"><SectionHead eyebrow="Local homeowner guides" title={`Planning a project in ${a.name}? Start here`} /><div class="mt-10 grid gap-6 md:grid-cols-3">{guides.map((g) => (<a href={`/blog/${g!.id}`} class="group overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-line/60 transition hover:-translate-y-1 hover:shadow-lift"><Photo name={g!.data.heroPhoto} alt="" ratio="16/10" class="w-full transition duration-700 group-hover:scale-105" sizes="(min-width:768px) 30vw, 90vw" widths={[400, 700]} /><div class="p-6"><p class="eyebrow">{g!.data.category}</p><h3 class="mt-2 font-display text-xl leading-snug">{g!.data.title}</h3></div></a>))}</div></div></section>
   {near.length > 0 && <section class="section bg-bone-2 pt-14"><div class="container-x"><SectionHead eyebrow="Nearby" title="We also serve" /><ul class="mt-8 flex flex-wrap gap-3">{near.map((n) => <li><a href={`/areas/${n!.slug}`} class="btn btn-ghost">{n!.name}</a></li>)}<li><a href="/serving-area" class="btn btn-dark">All areas</a></li></ul></div></section>}
   <CtaBand title={`Planning a project in ${a.name}?`} photo={a.heroPhoto} />
 </BaseLayout>

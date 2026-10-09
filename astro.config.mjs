@@ -9,7 +9,7 @@ export default defineConfig({
   site: SITE,
   trailingSlash: 'never',
   build: {
-    inlineStylesheets: 'auto',
+    inlineStylesheets: 'always',
     format: 'file',
   },
   integrations: [
@@ -19,7 +19,6 @@ export default defineConfig({
       filter: (page) => !/\/(thank-you|404|search)$/.test(page),
       changefreq: 'monthly',
       priority: 0.7,
-      lastmod: new Date(),
     }),
   ],
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },

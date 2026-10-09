@@ -21,6 +21,7 @@ const list = { '@type': 'ItemList', itemListElement: projects.map((p, i) => ({ '
       <div data-filter-group=".project-item" class="mt-10 flex flex-wrap gap-2" role="group" aria-label="Filter projects">
         {present.map(([k, l], i) => <button type="button" data-filter={k} aria-pressed={i === 0 ? 'true' : 'false'} class="rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-semibold transition hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-white">{l}</button>)}
       </div>
+      <h2 class="sr-only">All projects</h2>
       <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((p) => <div class="project-item reveal in" data-cats={`${p.category} ${p.sector}`}><ProjectCard project={p} /></div>)}
       </div>

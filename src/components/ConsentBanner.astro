@@ -1,13 +1,16 @@
 ---
 import { site } from '~/data/site';
 ---
-<div id="consent-banner" hidden role="dialog" aria-label="Cookie consent" aria-live="polite" class="fixed inset-x-3 bottom-3 z-[60] mx-auto max-w-3xl rounded-2xl bg-void p-5 text-white shadow-lift ring-1 ring-white/15 sm:bottom-5 sm:p-6 max-lg:bottom-20" data-pagefind-ignore>
-  <p class="font-display text-lg">Your privacy, your call.</p>
-  <p class="mt-2 text-[0.9rem] leading-relaxed text-silver">We use cookies to understand how the site is used and to measure our advertising. Essential cookies keep the site working. You can accept, decline or fine-tune — and we honor Global Privacy Control signals. See our <a href="/cookie-policy" class="underline hover:text-white">Cookie Policy</a> and <a href="/privacy-policy" class="underline hover:text-white">Privacy Policy</a>.</p>
-  <div class="mt-4 flex flex-wrap gap-2.5">
-    <button type="button" data-consent="accept" class="btn btn-primary !py-2.5">Accept all</button>
-    <button type="button" data-consent="reject" class="btn btn-ghost-light !py-2.5">Decline non-essential</button>
-    <button type="button" data-consent="open" class="btn !py-2.5 text-silver underline-offset-4 hover:text-white hover:underline">Preferences</button>
+<div id="consent-banner" hidden role="dialog" aria-label="Cookie consent" aria-live="polite" class="fixed inset-x-3 bottom-3 z-[60] mx-auto max-w-3xl rounded-2xl bg-void p-4 text-white shadow-lift ring-1 ring-white/15 sm:bottom-5 sm:p-6 max-lg:bottom-[5.25rem]" data-pagefind-ignore>
+  <p class="font-display text-base sm:text-lg">Your privacy, your call.</p>
+  <p class="mt-1.5 text-[0.82rem] leading-snug text-silver sm:mt-2 sm:text-[0.9rem] sm:leading-relaxed">
+    <span class="sm:hidden">We use cookies for analytics and ads. Choose what you allow — see our <a href="/cookie-policy" class="underline">Cookie Policy</a>.</span>
+    <span class="hidden sm:inline">We use cookies to understand how the site is used and to measure our advertising. Essential cookies keep the site working. You can accept, decline or fine-tune — and we honor Global Privacy Control signals. See our <a href="/cookie-policy" class="underline hover:text-white">Cookie Policy</a> and <a href="/privacy-policy" class="underline hover:text-white">Privacy Policy</a>.</span>
+  </p>
+  <div class="mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:flex sm:flex-wrap sm:gap-2.5">
+    <button type="button" data-consent="accept" class="btn btn-primary !px-4 !py-2.5">Accept all</button>
+    <button type="button" data-consent="reject" class="btn btn-ghost-light !px-4 !py-2.5"><span class="sm:hidden">Decline</span><span class="hidden sm:inline">Decline non-essential</span></button>
+    <button type="button" data-consent="open" class="btn col-span-2 !py-1.5 text-[0.85rem] text-silver underline-offset-4 hover:text-white hover:underline sm:col-span-1 sm:!py-2.5">Preferences</button>
   </div>
 </div>
 <div id="consent-prefs" hidden role="dialog" aria-modal="true" aria-labelledby="cp-title" class="fixed inset-0 z-[70] flex items-end justify-center bg-void/70 p-3 backdrop-blur-sm sm:items-center" data-pagefind-ignore>

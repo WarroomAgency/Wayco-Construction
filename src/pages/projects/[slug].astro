@@ -10,21 +10,25 @@ import CtaBand from '~/components/CtaBand.astro';
 import Icon from '~/components/Icon.astro';
 import { projects } from '~/data/projects';
 import { serviceBySlug } from '~/data/services';
-import { breadcrumbNode, abs, ids } from '~/lib/seo';
+import { breadcrumbNode, faqNode, abs, ids } from '~/lib/seo';
+import { projectFaqs } from '~/data/guides';
+import Faq from '~/components/Faq.astro';
+import AnswerBox from '~/components/AnswerBox.astro';
 export const getStaticPaths = (() => projects.map((project) => ({ params: { slug: project.slug }, props: { project } }))) satisfies GetStaticPaths;
 const { project: p } = Astro.props;
 const svcs = p.services.map((s) => serviceBySlug[s]).filter(Boolean);
 const more = projects.filter((x) => x.slug !== p.slug && x.sector === p.sector).slice(0, 3);
+const faqs = projectFaqs[p.category] ?? [];
 const url = abs(`/projects/${p.slug}`);
 const gallery = { '@type': 'ImageGallery', '@id': `${url}#gallery`, name: `${p.name} — Wayco Construction`, description: p.summary, url, about: { '@id': ids.business }, numberOfItems: p.gallery.length };
 const label = p.category === 'adu' ? 'ADU' : p.category.replace('-', ' ');
 const title = `${p.name} — ${label.charAt(0).toUpperCase() + label.slice(1)} Project`;
 ---
-<BaseLayout title={title} description={`${p.summary} See photos of this ${p.sector} project by Wayco Construction, El Cajon, CA.`} path={`/projects/${p.slug}`} ogPhoto={p.hero} schema={[gallery, breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'Projects', path: '/projects' }, { name: p.name, path: `/projects/${p.slug}` }])]} lightbox>
+<BaseLayout title={title} description={`${p.summary} See photos of this ${p.sector} project by Wayco Construction, El Cajon, CA.`} path={`/projects/${p.slug}`} ogPhoto={p.hero} schema={[gallery, ...(faqs.length ? [faqNode(faqs)] : []), breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'Projects', path: '/projects' }, { name: p.name, path: `/projects/${p.slug}` }])]} lightbox>
   <PageHero eyebrow={`${p.sector === 'residential' ? 'Residential' : 'Commercial'} project${p.location ? ' · ' + p.location : ''}`} h1={p.name} lead={p.summary} photo={p.hero} photoAlt={`${p.name} by Wayco Construction`} crumbs={[{ name: 'Projects', path: '/projects' }, { name: p.name }]} compact />
   <section class="section">
     <div class="container-x grid gap-12 lg:grid-cols-[1.4fr_1fr]">
-      <div class="space-y-5 text-lg leading-relaxed text-steel">{p.description.map((d) => <p>{d}</p>)}</div>
+      <div class="space-y-6"><AnswerBox label="Project overview" text={`${p.name}${p.location ? ` (${p.location})` : ""}: ${p.summary} Delivered by Wayco Construction, a design-build general contractor in El Cajon, CA serving San Diego County.`} /><div class="space-y-5 text-lg leading-relaxed text-steel">{p.description.map((d) => <p>{d}</p>)}</div></div>
       <div class="rounded-3xl bg-white p-7 shadow-soft ring-1 ring-line/60">
         <p class="eyebrow mb-4">Scope highlights</p>
         <ul class="space-y-3">{p.scope.map((s) => <li class="flex gap-3"><Icon name="check" size={18} class="mt-1 shrink-0 text-blue" />{s}</li>)}</ul>
@@ -35,6 +39,7 @@ const title = `${p.name} — ${label.charAt(0).toUpperCase() + label.slice(1)} P
   <section class="section bg-bone-2 pt-14">
     <div class="container-x"><SectionHead eyebrow="Gallery" title={`${p.name}: project photos`} /><div class="mt-10"><Gallery photos={p.gallery} alt={p.name} group="project" /></div></div>
   </section>
+  {faqs.length > 0 && <section class="section"><div class="container-n"><Faq faqs={faqs} title={`About ${p.name}`} eyebrow="Project FAQ" /></div></section>}
   {svcs.length > 0 && <section class="section"><div class="container-x"><SectionHead eyebrow="Services involved" title="How we built it" /><div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{svcs.map((s) => <ServiceCard service={s} />)}</div></div></section>}
   {more.length > 0 && <section class="section bg-bone-2 pt-14"><div class="container-x"><SectionHead eyebrow="More work" title="Keep browsing the portfolio" /><div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{more.map((m) => <ProjectCard project={m} />)}</div></div></section>}
   <CtaBand photo={p.hero} />
