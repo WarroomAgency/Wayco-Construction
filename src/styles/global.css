@@ -1,4 +1,3 @@
-@import '@fontsource-variable/fraunces/opsz.css';
 @import '@fontsource-variable/inter';
 @tailwind base;
 @tailwind components;
@@ -7,9 +6,10 @@
 @layer base {
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body { @apply bg-bone text-ink font-sans antialiased; font-feature-settings: 'cv11', 'ss01'; }
-  h1, h2, h3, h4 { @apply font-display text-ink; text-wrap: balance; }
+  h1, h2, h3, h4 { @apply font-display font-semibold text-ink; text-wrap: balance; }
   p { text-wrap: pretty; }
   ::selection { background: #2747b0; color: #fff; }
+  .eyebrow-rule::before { content: ''; display: inline-block; width: 2rem; height: 2px; background: currentColor; vertical-align: middle; margin-right: .75rem; }
   :focus-visible { outline: 2px solid #3e63e0; outline-offset: 3px; border-radius: 4px; }
   img { @apply max-w-full; }
   [hidden] { display: none !important; }
@@ -32,7 +32,7 @@
   .link-arrow { @apply inline-flex items-center gap-1.5 font-semibold text-blue transition hover:gap-2.5; }
   .reveal { opacity: 0; transform: translateY(18px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
   .reveal.in { opacity: 1; transform: none; }
-  .prose-wayco { @apply prose prose-lg max-w-none prose-headings:font-display prose-headings:font-medium prose-headings:tracking-tight prose-h2:mt-12 prose-h2:text-display-md prose-h3:text-display-sm prose-a:text-blue prose-a:font-semibold prose-a:no-underline hover:prose-a:underline prose-strong:text-ink prose-table:text-sm prose-th:bg-bone-2 prose-th:px-3 prose-th:py-2 prose-td:px-3 prose-td:py-2 prose-img:rounded-2xl; }
+  .prose-wayco { @apply prose prose-lg max-w-none prose-headings:font-display prose-headings:font-semibold prose-headings:tracking-tight prose-h2:mt-12 prose-h2:text-display-md prose-h3:text-display-sm prose-a:text-blue prose-a:font-semibold prose-a:no-underline hover:prose-a:underline prose-strong:text-ink prose-table:text-sm prose-th:bg-bone-2 prose-th:px-3 prose-th:py-2 prose-td:px-3 prose-td:py-2 prose-img:rounded-2xl; }
 }
 
 @media (prefers-reduced-motion: reduce) {

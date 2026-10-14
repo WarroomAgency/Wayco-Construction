@@ -26,11 +26,11 @@ const socials = [...site.social, ...site.extraProfiles.map((p) => ({ ...p, handl
       </ul>
     </div>
     <nav aria-label="Residential services">
-      <p class="eyebrow mb-5 !text-white">Residential</p>
+      <p class="eyebrow mb-5 !text-white"><a href="/residential" class="hover:underline">Residential &amp; ADUs</a></p>
       <ul class="space-y-2.5 text-[0.95rem]">{residential.map((s) => <li><a href={`/${s.slug}`} class="hover:text-white">{s.name}</a></li>)}</ul>
     </nav>
     <nav aria-label="Commercial services and process">
-      <p class="eyebrow mb-5 !text-white">Commercial &amp; Process</p>
+      <p class="eyebrow mb-5 !text-white"><a href="/commercial" class="hover:underline">Commercial &amp; Process</a></p>
       <ul class="space-y-2.5 text-[0.95rem]">{[...commercial, ...process].map((s) => <li><a href={`/${s.slug}`} class="hover:text-white">{s.name}</a></li>)}</ul>
     </nav>
     <nav aria-label="Company">

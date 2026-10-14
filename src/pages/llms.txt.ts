@@ -24,6 +24,10 @@ export const GET: APIRoute = async () => {
 - Typical project start: about four weeks (design & submittals weeks 1–2, procurement week 3, mobilization week 4)
 - Google reviews: ${site.google.reviewsUrl}
 
+## Audiences
+- [Commercial & hospitality](${u('/commercial')}): hotels, casinos, bars, medical offices, multi-family, tenant improvements, aviation and industrial.
+- [Residential & ADUs](${u('/residential')}): turnkey ADUs, kitchen and bath remodels, additions, custom homes and whole-home renovations.
+
 ## Services
 ${services.map((s) => `- [${s.name}](${u('/' + s.slug)}): ${s.summary}`).join('\n')}
 

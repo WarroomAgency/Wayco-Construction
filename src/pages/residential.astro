@@ -1,0 +1,82 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import AnswerBox from '~/components/AnswerBox.astro';
+import QuoteForm from '~/components/QuoteForm.astro';
+import ServiceCard from '~/components/ServiceCard.astro';
+import ProjectCard from '~/components/ProjectCard.astro';
+import ReviewCard from '~/components/ReviewCard.astro';
+import ReviewBadge from '~/components/ReviewBadge.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import Steps from '~/components/Steps.astro';
+import Faq from '~/components/Faq.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import Icon from '~/components/Icon.astro';
+import Photo from '~/components/Photo.astro';
+import { residential } from '~/data/services';
+import { projects } from '~/data/projects';
+import { featuredReviews } from '~/data/reviews';
+import { faqGroups } from '~/data/faqs';
+import { site } from '~/data/site';
+import { breadcrumbNode, faqNode, abs, ids } from '~/lib/seo';
+const faqs = [...faqGroups.find((g) => g.id === 'adus')!.faqs.slice(0, 3), ...faqGroups.find((g) => g.id === 'pricing-timeline')!.faqs.slice(0, 3)];
+const work = projects.filter((p) => p.sector === 'residential');
+const steps = [
+  { title: 'Free consultation & walkthrough', text: 'We visit the property, listen to your goals and budget, and tell you plainly what’s feasible.' },
+  { title: 'Design & submittals · weeks 1–2', text: 'Plans, engineering and permit submittals prepared in-house so nothing waits on a handoff.' },
+  { title: 'Procurement · week 3', text: 'Materials ordered and scheduled — with showroom pricing on finishes — before we mobilize.' },
+  { title: 'Mobilize & build · week 4 on', text: 'Your project manager and superintendent keep the schedule, the site and your inbox in order.' },
+];
+const url = abs('/residential');
+const page = { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: 'Residential Contractor & ADU Builder in San Diego County', isPartOf: { '@id': ids.site }, about: { '@id': ids.business }, speakable: { '@type': 'SpeakableSpecification', cssSelector: ['[data-answer]', 'h1'] } };
+---
+<BaseLayout title="Residential Contractor & ADU Builder in San Diego" description="Turnkey ADUs, kitchen and bathroom remodels, additions and whole-home renovations in San Diego County. Design-build, permits handled, 1-year warranty. Free consultation." path="/residential" ogPhoto="additional-photos-remodel-gallery-02" schema={[page, breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'Residential & ADUs', path: '/residential' }]), faqNode(faqs)]}>
+  <PageHero eyebrow="Residential & ADUs" h1="Residential contractor and ADU builder in San Diego County" lead="Turnkey ADUs, kitchen and bath remodels, additions, custom homes and whole-home renovations — designed, permitted and built by one team." photo="additional-photos-remodel-gallery-02" photoAlt="Custom kitchen remodel by Wayco Construction" crumbs={[{ name: 'Residential & ADUs' }]} secondaryHref="/adu-construction" secondaryLabel="Explore ADUs" chips={['1-year workmanship warranty', 'Permits handled', 'Free consultation']} />
+
+  <section class="section">
+    <div class="container-x grid items-start gap-12 lg:grid-cols-[1.5fr_1fr]">
+      <div class="space-y-8">
+        <AnswerBox label="Residential at a glance" text="Wayco Construction is a family-owned design-build residential contractor in El Cajon, CA serving San Diego County. We build turnkey ADUs, remodel kitchens and bathrooms, add on to homes, and renovate whole homes — handling design, engineering, permits and construction under one contract, with a 1-year workmanship warranty and free consultations." />
+        <div class="space-y-5 text-lg leading-relaxed text-steel">
+          <p>Homeowners tell us the same thing again and again: they always knew what was happening next. That comes from running residential projects the way we run commercial ones — written scope, a real schedule, one project manager, and a superintendent on site.</p>
+          <p>Our ADU packages run from {site.aduPriceRange.label.split('–')[0]} to {site.aduPriceRange.label.split('–')[1]} for our 1,200 sq ft, 2-bedroom, 1-bath flagship; remodel pricing is scoped in writing after your free consultation.</p>
+        </div>
+        <ReviewBadge />
+      </div>
+      <div class="lg:sticky lg:top-28"><QuoteForm id="residential" audience="residential" compact title="Start your home project" sub="Tell us what you’re planning. We’ll call you within one business day." /></div>
+    </div>
+  </section>
+
+  <section class="section bg-bone">
+    <div class="container-x grid items-center gap-12 lg:grid-cols-2">
+      <div>
+        <p class="eyebrow eyebrow-rule mb-4">Flagship</p>
+        <h2 class="font-display text-display-lg">Turnkey ADUs.</h2>
+        <p class="mt-5 text-lg leading-relaxed text-steel">County pre-approved design plans, full engineering, complete construction, appliances and fixtures — move-in ready. Choose from five model plans or start from your lot.</p>
+        <div class="mt-8 flex flex-wrap gap-3"><a href="/adu-construction" class="btn btn-primary !rounded-md text-[0.82rem] font-bold uppercase tracking-[0.06em]" data-track="cta" data-loc="residential-adu">Explore ADUs</a><a href="/projects/adu-model-plans" class="btn btn-ghost !rounded-md text-[0.82rem] font-bold uppercase tracking-[0.06em]">Model plans A–E</a></div>
+      </div>
+      <div class="grid grid-cols-2 gap-4"><Photo name="elliot-adu-gallery-05" alt="Finished ADU kitchen and entry by Wayco Construction" ratio="3/4" class="w-full rounded-2xl" sizes="(min-width:1024px) 22vw, 45vw" widths={[400, 700, 1000]} /><Photo name="walker-adu-gallery-02" alt="Hardwood-floored ADU interior by Wayco Construction" ratio="3/4" class="mt-10 w-full rounded-2xl" sizes="(min-width:1024px) 22vw, 45vw" widths={[400, 700, 1000]} /></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-x">
+      <SectionHead eyebrow="Services" title="Residential construction services" />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{residential.map((s) => <div class="reveal"><ServiceCard service={s} /></div>)}</div>
+    </div>
+  </section>
+
+  <section class="section bg-bone">
+    <div class="container-x"><div class="flex flex-wrap items-end justify-between gap-6"><SectionHead eyebrow="Residential portfolio" title="Recent home projects" /><a href="/projects" class="link-arrow text-sm font-bold uppercase tracking-[0.05em]">Full portfolio <Icon name="arrow" size={16} /></a></div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{work.slice(0, 6).map((p) => <div class="reveal"><ProjectCard project={p} /></div>)}</div></div>
+  </section>
+
+  <section class="section"><div class="container-x"><SectionHead eyebrow="How it works" title="From first call to first day on site in about four weeks." /><div class="mt-12"><Steps steps={steps} /></div></div></section>
+
+  <section class="on-dark bg-void py-20 text-white sm:py-24">
+    <div class="container-x"><div class="flex flex-wrap items-end justify-between gap-6"><SectionHead dark eyebrow="Google reviews" title="Homeowners on working with Wayco" /><ReviewBadge dark /></div><div class="mt-10 grid gap-5 md:grid-cols-3">{featuredReviews.filter((r) => !r.tags.includes('commercial')).slice(0, 3).map((r) => <div class="reveal"><ReviewCard review={r} dark /></div>)}</div><p class="mt-8"><a href="/reviews" class="link-arrow !text-white">Read all {site.google.reviewCount} Google reviews <Icon name="arrow" size={16} /></a></p></div>
+  </section>
+
+  <section class="section"><div class="container-n"><Faq faqs={faqs} title="Residential projects: your questions" eyebrow="FAQ" /></div></section>
+  <CtaBand title="Ready to start your home project?" photo="elliot-adu-gallery-05" />
+</BaseLayout>

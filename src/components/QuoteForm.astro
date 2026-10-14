@@ -2,8 +2,10 @@
 import Icon from './Icon.astro';
 import { services } from '~/data/services';
 import { site } from '~/data/site';
-interface Props { service?: string; id?: string; title?: string; sub?: string; compact?: boolean; dark?: boolean }
-const { service = '', id = 'consult', title = 'Request a free consultation', sub = 'Tell us about your project — a member of our team will reach out, usually within one business day.', compact = false, dark = false } = Astro.props;
+interface Props { service?: string; id?: string; title?: string; sub?: string; compact?: boolean; dark?: boolean; audience?: 'residential' | 'commercial' }
+const { service = '', id = 'consult', audience: audienceProp, title = 'Request a free consultation', sub = 'Tell us about your project — a member of our team will reach out, usually within one business day.', compact = false, dark = false } = Astro.props;
+const svcCat = services.find((x) => x.slug === service)?.category;
+const audience = audienceProp ?? (svcCat === 'commercial' || svcCat === 'process' ? 'commercial' : 'residential');
 const groups = [
   { label: 'Residential', items: services.filter((s) => s.category === 'residential') },
   { label: 'Commercial', items: services.filter((s) => s.category === 'commercial') },
@@ -18,7 +20,14 @@ const label = 'mb-1.5 block text-[0.82rem] font-semibold text-steel';
   {['page_url', 'landing', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'msclkid'].map((n) => <input type="hidden" name={n} value="" />)}
   <h2 class="font-display text-display-sm">{title}</h2>
   <p class="mt-1.5 text-[0.92rem] text-steel-2">{sub}</p>
-  <div class="mt-6 grid gap-4 sm:grid-cols-2">
+  <fieldset class="mt-5">
+    <legend class={label}>I’m planning a… *</legend>
+    <div class="grid grid-cols-2 gap-2">
+      <label class="cursor-pointer"><input type="radio" name="audience" value="Residential / ADU" checked={audience === 'residential'} required class="peer sr-only" /><span class="flex items-center justify-center rounded-xl border border-line bg-white px-3 py-3 text-center text-[0.9rem] font-semibold text-steel transition peer-checked:border-blue peer-checked:bg-blue-soft peer-checked:text-blue peer-focus-visible:ring-2 peer-focus-visible:ring-blue/40">Home / ADU project</span></label>
+      <label class="cursor-pointer"><input type="radio" name="audience" value="Commercial / Hospitality" checked={audience === 'commercial'} class="peer sr-only" /><span class="flex items-center justify-center rounded-xl border border-line bg-white px-3 py-3 text-center text-[0.9rem] font-semibold text-steel transition peer-checked:border-blue peer-checked:bg-blue-soft peer-checked:text-blue peer-focus-visible:ring-2 peer-focus-visible:ring-blue/40">Commercial project</span></label>
+    </div>
+  </fieldset>
+  <div class="mt-4 grid gap-4 sm:grid-cols-2">
     <div><label class={label} for={`${id}-name`}>Full name *</label><input class={input} id={`${id}-name`} name="name" required autocomplete="name" placeholder="Jane Smith" /></div>
     <div><label class={label} for={`${id}-phone`}>Phone *</label><input class={input} id={`${id}-phone`} name="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="(619) 555-0123" /></div>
     <div class="sm:col-span-2"><label class={label} for={`${id}-email`}>Email *</label><input class={input} id={`${id}-email`} name="email" type="email" required autocomplete="email" placeholder="you@email.com" /></div>

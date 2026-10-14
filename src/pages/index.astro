@@ -1,36 +1,49 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import Photo from '~/components/Photo.astro';
 import Icon from '~/components/Icon.astro';
-import QuoteForm from '~/components/QuoteForm.astro';
 import ReviewBadge from '~/components/ReviewBadge.astro';
 import ReviewCard from '~/components/ReviewCard.astro';
-import ServiceCard from '~/components/ServiceCard.astro';
-import ProjectCard from '~/components/ProjectCard.astro';
 import SectionHead from '~/components/SectionHead.astro';
 import Faq from '~/components/Faq.astro';
 import CtaBand from '~/components/CtaBand.astro';
 import LogoWall from '~/components/LogoWall.astro';
-import Steps from '~/components/Steps.astro';
 import { site } from '~/data/site';
-import { residential, commercial, serviceBySlug } from '~/data/services';
-import { featuredProjects, projectBySlug } from '~/data/projects';
+import { projectBySlug } from '~/data/projects';
 import { featuredReviews } from '~/data/reviews';
 import { areas } from '~/data/areas';
 import { homeFaqs } from '~/data/faqs';
 import { team } from '~/data/team';
 import { faqNode } from '~/lib/seo';
 
-const featuredServices = ['adu-construction', 'kitchen-remodeling', 'bathroom-remodeling', 'whole-home-renovation', 'home-additions', 'custom-home-construction'].map((s) => serviceBySlug[s]);
-const projects = ['elliot-adu', 'kitchen-remodel-portfolio', 'humphreys-pool-bar', 'bathroom-remodel-portfolio', 'pauma-casino', 'hotel-projects'].map((s) => projectBySlug[s]);
+const posts = (await getCollection('blog')).sort((a, b) => +b.data.pubDate - +a.data.pubDate).slice(0, 6);
+const fmt = (x: Date) => x.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
 const josh = team[0];
-const aduIncluded = ['County pre-approved design plans', 'Full engineering', 'Complete construction', 'Appliances & fixtures', 'Turnkey, move-in ready'];
-const startSteps = [
-  { title: 'Free consultation & walkthrough', text: 'We visit the property, listen to your goals and budget, and tell you plainly what’s feasible.' },
-  { title: 'Design & submittals · weeks 1–2', text: 'Plans, engineering and permit submittals prepared in-house so nothing waits on a handoff.' },
-  { title: 'Procurement · week 3', text: 'Materials ordered and scheduled — with showroom pricing on finishes — before we mobilize.' },
-  { title: 'Mobilize & build · week 4 on', text: 'Your superintendent and project manager keep the schedule, the site and your inbox in order.' },
+
+const panels = [
+  {
+    href: '/commercial', photo: 'humphry-s-pool-bar-gallery-14-1', eyebrow: 'Commercial & hospitality', title: 'Spaces where business happens.',
+    text: 'Casinos, hotels, bars and restaurants, medical offices, multi-family, aviation and industrial buildings — built to schedule.',
+    links: [['Hospitality & gaming', '/hospitality-and-gaming'], ['Tenant improvements', '/tenant-improvement'], ['Multi-family', '/multi-family-construction']],
+    alt: 'Resort pool bar at dusk, built by Wayco Construction',
+  },
+  {
+    href: '/residential', photo: 'additional-photos-remodel-gallery-02', eyebrow: 'Residential & ADUs', title: 'Homes built around your life.',
+    text: 'Turnkey ADUs, kitchens, bathrooms, additions and whole-home renovations — designed, permitted and built by one team.',
+    links: [['ADUs', '/adu-construction'], ['Kitchens & baths', '/kitchen-remodeling'], ['Whole-home', '/whole-home-renovation']],
+    alt: 'Custom kitchen remodel with navy cabinetry and island',
+  },
 ];
+const featured = [
+  { p: projectBySlug['pauma-casino'], tag: 'Commercial · Gaming' },
+  { p: projectBySlug['elliot-adu'], tag: 'Residential · ADU' },
+  { p: projectBySlug['hotel-projects'], tag: 'Commercial · Hospitality' },
+];
+const markets = {
+  commercial: [['Hospitality & gaming', '/hospitality-and-gaming'], ['Hotels', '/projects/hotel-projects'], ['Healthcare & medical offices', '/projects/medical-office-la-jolla'], ['Aviation & industrial', '/projects/airport-hangars'], ['Multi-family', '/multi-family-construction'], ['Retail & tenant improvement', '/tenant-improvement'], ['Historic & public', '/projects/cabrillo-national-monument'], ['Commercial construction', '/commercial-construction']],
+  residential: [['Accessory dwelling units (ADUs)', '/adu-construction'], ['Kitchen remodeling', '/kitchen-remodeling'], ['Bathroom remodeling', '/bathroom-remodeling'], ['Whole-home renovation', '/whole-home-renovation'], ['Home additions', '/home-additions'], ['Custom homes', '/custom-home-construction'], ['Exteriors & outdoor living', '/outdoor-living'], ['Garages, carports & metal buildings', '/garages-carports-metal-buildings']],
+};
 const stats = [
   { v: '25+', l: 'Years of construction experience' },
   { v: `${site.google.rating.toFixed(1)}★`, l: `${site.google.reviewCount} Google reviews` },
@@ -38,192 +51,175 @@ const stats = [
   { v: '~4 wks', l: 'Typical time to project start' },
 ];
 const why = [
-  { icon: 'layers', t: 'One team, one contract', d: 'Design, engineering, permitting and construction under a single point of accountability — no finger-pointing between a designer and a builder.' },
-  { icon: 'file', t: 'Permits handled', d: 'We prepare and manage all required permitting and inspections, so you aren’t left decoding city and county requirements.' },
-  { icon: 'users', t: 'Real communication', d: 'Clients consistently tell us the same thing: they always knew what was happening next. A dedicated PM and superintendent keep you in the loop.' },
-  { icon: 'shield', t: 'A warranty that’s honored', d: 'Every project carries a 1-year workmanship warranty — and past clients specifically note how quickly we respond.' },
+  { icon: 'layers', t: 'One team, one contract', d: 'Design, engineering, permitting and construction under a single point of accountability.' },
+  { icon: 'file', t: 'Permits handled', d: 'We prepare and manage required permitting and inspections from submittal to final.' },
+  { icon: 'users', t: 'Real communication', d: 'Clients consistently say they always knew what was happening next.' },
+  { icon: 'shield', t: 'A warranty we honor', d: 'Every project carries a 1-year workmanship warranty — and clients note how fast we respond.' },
 ];
 const webPage = {
-  '@type': 'WebPage',
-  '@id': `${site.url}/#webpage`,
-  url: site.url,
+  '@type': 'WebPage', '@id': `${site.url}/#webpage`, url: site.url,
   name: 'Wayco Construction | Design-Build General Contractor in El Cajon & San Diego County',
-  isPartOf: { '@id': `${site.url}/#website` },
-  about: { '@id': `${site.url}/#localbusiness` },
+  isPartOf: { '@id': `${site.url}/#website` }, about: { '@id': `${site.url}/#localbusiness` },
   primaryImageOfPage: { '@type': 'ImageObject', url: `${site.url}${site.ogDefault}` },
   speakable: { '@type': 'SpeakableSpecification', cssSelector: ['[data-answer]', 'h1'] },
 };
 const video = {
-  '@type': 'VideoObject',
-  name: 'Wayco Construction — design-build general contractor, El Cajon CA',
+  '@type': 'VideoObject', name: 'Wayco Construction — design-build general contractor, El Cajon CA',
   description: 'A look at the homes, ADUs and commercial spaces built by Wayco Construction in San Diego County.',
-  thumbnailUrl: `${site.url}/images/video-poster.jpg`,
-  uploadDate: '2025-01-01',
-  contentUrl: `${site.url}/video/wayco-reel.mp4`,
+  thumbnailUrl: `${site.url}/images/video-poster.jpg`, uploadDate: '2025-01-01', contentUrl: `${site.url}/video/wayco-reel.mp4`,
 };
 ---
 <BaseLayout
   title="Wayco Construction | ADU & General Contractor in El Cajon, CA"
   fullTitle
-  description="Family-owned design-build contractor in El Cajon serving San Diego County. ADUs, kitchen & bath remodels, custom homes and commercial builds. 1-year warranty. Free consultation."
+  description="Family-owned design-build general contractor in El Cajon serving San Diego County: commercial and hospitality builds, ADUs, remodels and custom homes. 1-year warranty. Free consultation."
   path="/"
-  ogPhoto="residential-hero"
+  ogPhoto="humphry-s-pool-bar-gallery-14-1"
   schema={[webPage, video, faqNode(homeFaqs)]}
 >
-  <!-- HERO -->
-  <section class="on-dark relative isolate overflow-hidden bg-void text-white" data-section="hero">
-    <Photo name="inc-video" alt="" class="absolute inset-0 -z-20 h-full w-full" sizes="100vw" widths={[640, 960, 1400, 1920]} priority />
-    <video class="absolute inset-0 -z-20 h-full w-full object-cover opacity-0 transition-opacity duration-1000" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" id="hero-video" data-src="/video/wayco-reel.mp4"></video>
-    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-void/95 via-void/70 to-void/20"></div>
-    <div class="absolute inset-0 -z-10 bg-gradient-to-t from-void/80 via-transparent to-void/30"></div>
-    <div class="container-x grid items-center gap-12 py-10 sm:py-24 lg:grid-cols-[1.25fr_1fr] lg:py-28">
-      <div class="animate-fade-up">
-        <div class="flex flex-wrap items-center gap-3"><ReviewBadge dark /><span class="hidden rounded-full bg-white/10 px-4 py-2 text-[0.82rem] text-silver ring-1 ring-white/15 sm:inline">Family-owned · El Cajon, CA</span></div>
-        <h1 class="mt-5 font-display text-hero !text-white sm:mt-7">Design-build contractor for San Diego County homes &amp; businesses.</h1>
-        <p class="mt-4 max-w-2xl text-base leading-relaxed text-silver sm:mt-6 sm:text-xl">ADUs, kitchen and bath remodels, whole-home renovations, custom homes and commercial build-outs — designed, permitted and built by one accountable team, backed by a 1-year workmanship warranty.</p>
-        <div class="mt-6 flex flex-wrap gap-3 sm:mt-9">
-          <a href="/request-consultation" class="btn btn-primary text-base" data-track="cta" data-loc="hero">Get a Free Consultation <Icon name="arrow" size={18} /></a>
-          <a href="/projects" class="btn btn-ghost-light text-base" data-track="cta" data-loc="hero">See Our Work</a>
+  <!-- TWO-DOOR HERO -->
+  <section class="on-dark grid bg-void text-white lg:grid-cols-2" data-section="hero" aria-label="Choose your project type">
+    {panels.map((pn, i) => (
+      <a href={pn.href} class="group relative isolate flex min-h-[26rem] items-end overflow-hidden sm:min-h-[32rem] lg:min-h-[calc(100vh-8rem)] lg:max-h-[52rem]" data-track="cta" data-loc={`hero-${i}`}>
+        <Photo name={pn.photo} alt={pn.alt} class="absolute inset-0 -z-20 h-full w-full transition duration-[1400ms] ease-out group-hover:scale-105" sizes="(min-width:1024px) 50vw, 100vw" widths={[640, 960, 1400, 1800]} priority={i === 0} loading={i === 0 ? 'eager' : 'lazy'} />
+        <div class="absolute inset-0 -z-10 bg-gradient-to-t from-void/90 via-void/25 to-transparent"></div>
+        <div class="w-full p-6 sm:p-10 lg:p-14">
+          <p class="eyebrow eyebrow-rule !text-white/80">{pn.eyebrow}</p>
+          <h2 class="mt-4 max-w-md font-display text-display-lg !text-white">{pn.title}</h2>
+          <p class="mt-4 hidden max-w-lg text-[1.02rem] leading-relaxed text-white/85 sm:block">{pn.text}</p>
+          <span class="mt-6 inline-flex items-center gap-2 rounded-md bg-blue px-6 py-3.5 text-[0.82rem] font-bold uppercase tracking-[0.06em] transition group-hover:bg-blue-hi">Explore {i === 0 ? 'commercial' : 'residential & ADUs'} <Icon name="arrow" size={16} /></span>
         </div>
-        <ul class="mt-6 flex flex-wrap gap-x-7 sm:mt-9 gap-y-3 text-[0.92rem] text-silver">
-          {['Permits handled', 'Free consultations', 'Projects typically start within ~4 weeks'].map((t) => <li class="flex items-center gap-2"><Icon name="check" size={16} class="text-blue-hi" />{t}</li>)}
-        </ul>
-      </div>
-      <div class="hidden lg:block animate-fade-up [animation-delay:150ms]"><QuoteForm id="hero" compact dark title="Free project consultation" sub="Tell us what you’re planning. We’ll call you within one business day." /></div>
-    </div>
+      </a>
+    ))}
   </section>
 
-  <!-- ANSWER + STATS -->
-  <section class="section pb-10 sm:pb-14">
-    <div class="container-x grid items-start gap-10 lg:grid-cols-[1.2fr_1fr]">
+  <!-- STATEMENT -->
+  <section class="section pb-10" data-section="statement">
+    <div class="container-x grid items-start gap-12 lg:grid-cols-[1.4fr_1fr]">
       <div class="reveal">
-        <p class="eyebrow mb-4">Who we are</p>
-        <h2 class="font-display text-display-lg">A San Diego County general contractor that treats your project like it’s the only one.</h2>
-        <p data-answer class="mt-6 text-lg leading-relaxed text-steel">Wayco Construction, Inc. is a family-owned design-build general contractor based in El Cajon, California. We design, permit and build ADUs, kitchen and bathroom remodels, whole-home renovations, custom homes, tenant improvements and commercial projects across San Diego County, with more than 25 years of leadership experience, a 1-year workmanship warranty and free consultations.</p>
-        <div class="mt-7 flex flex-wrap gap-4"><a href="/about" class="link-arrow">Our story <Icon name="arrow" size={16} /></a><a href="/meet-the-team" class="link-arrow">Meet the team <Icon name="arrow" size={16} /></a></div>
+        <p class="eyebrow eyebrow-rule mb-5">Wayco Construction · El Cajon, CA</p>
+        <h1 class="font-display text-hero">Design-build general contractor for San Diego County homes, ADUs &amp; commercial projects.</h1>
+        <p data-answer class="mt-7 max-w-3xl text-xl leading-relaxed text-steel">Wayco Construction, Inc. is a family-owned design-build general contractor based in El Cajon, California. We design, permit and build ADUs, kitchen and bathroom remodels, whole-home renovations and custom homes, along with tenant improvements, hotels, casinos and other commercial projects across San Diego County — with 25+ years of leadership experience, a 1-year workmanship warranty and free consultations.</p>
+        <div class="mt-8 flex flex-wrap items-center gap-4"><a href="/about" class="btn btn-primary !rounded-md text-[0.82rem] font-bold uppercase tracking-[0.06em]">About Wayco</a><a href="/request-consultation" class="btn btn-ghost !rounded-md text-[0.82rem] font-bold uppercase tracking-[0.06em]" data-track="cta" data-loc="statement">Free consultation</a><ReviewBadge /></div>
       </div>
-      <dl class="reveal grid grid-cols-2 gap-4">
-        {stats.map((s) => <div class="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-line/60"><dt class="font-display text-4xl text-blue sm:text-5xl">{s.v}</dt><dd class="mt-2 text-[0.9rem] leading-snug text-steel-2">{s.l}</dd></div>)}
+      <dl class="reveal grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-line ring-1 ring-line">
+        {stats.map((s) => <div class="bg-white p-6"><dt class="font-display text-4xl font-semibold text-blue sm:text-5xl">{s.v}</dt><dd class="mt-2 text-[0.9rem] leading-snug text-steel-2">{s.l}</dd></div>)}
       </dl>
     </div>
   </section>
 
-  <!-- SERVICES -->
-  <section class="section" data-section="services">
+  <!-- FEATURED PROJECTS -->
+  <section class="section" data-section="projects">
     <div class="container-x">
-      <div class="flex flex-wrap items-end justify-between gap-6">
-        <SectionHead eyebrow="What we build" title="Residential work, done the way you’d do it for family." text="From a single kitchen to a ground-up ADU, every project gets a written scope, a clear schedule and one person who answers your calls." />
-        <a href="/adu-construction" class="link-arrow">All services &amp; ADUs <Icon name="arrow" size={16} /></a>
-      </div>
-      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {featuredServices.map((s) => <div class="reveal"><ServiceCard service={s} /></div>)}
-      </div>
-      <div class="mt-6 grid gap-6 md:grid-cols-2">
-        <a href="/exterior-improvements" class="group reveal flex items-center justify-between gap-4 rounded-3xl bg-bone-2 p-6 ring-1 ring-line/60 transition hover:bg-white"><span><span class="eyebrow">Also</span><span class="mt-1 block font-display text-xl">Exteriors, outdoor living, garages &amp; more</span></span><Icon name="arrow" size={22} class="shrink-0 text-blue transition group-hover:translate-x-1" /></a>
-        <a href="/commercial-construction" class="group reveal flex items-center justify-between gap-4 rounded-3xl bg-ink p-6 text-white transition hover:bg-steel"><span><span class="eyebrow !text-silver">Commercial</span><span class="mt-1 block font-display text-xl !text-white">Tenant improvements, hospitality, multi-family &amp; ground-up</span></span><Icon name="arrow" size={22} class="shrink-0 text-blue-hi transition group-hover:translate-x-1" /></a>
+      <div class="flex flex-wrap items-end justify-between gap-6"><h2 class="font-display text-display-lg">Featured projects</h2><a href="/projects" class="link-arrow text-sm font-bold uppercase tracking-[0.05em]">View all <Icon name="arrow" size={16} /></a></div>
+      <div class="mt-10 space-y-14">
+        {featured.map(({ p, tag }) => (
+          <a href={`/projects/${p.slug}`} class="group reveal block">
+            <div class="overflow-hidden"><Photo name={p.hero} alt={`${p.name} — ${p.summary}`} ratio="21/9" class="w-full transition duration-[1400ms] ease-out group-hover:scale-[1.03]" sizes="(min-width:1320px) 1240px, 100vw" widths={[800, 1200, 1800, 2200]} /></div>
+            <div class="mx-auto mt-6 max-w-3xl text-center">
+              <p class="eyebrow">{tag}</p>
+              <h3 class="mt-2 font-display text-display-md !text-blue">{p.name}</h3>
+              <p class="mt-3 text-lg leading-relaxed text-steel">{p.summary}</p>
+              <span class="mt-4 inline-flex text-blue transition group-hover:translate-x-1"><Icon name="arrow" size={26} /></span>
+            </div>
+          </a>
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- ADU FEATURE -->
-  <section class="on-dark relative isolate my-6 overflow-hidden bg-void py-20 text-white sm:py-28" data-section="adu">
-    <Photo name="model-e-adu-gallery-02" alt="" class="absolute inset-0 -z-20 h-full w-full opacity-30" sizes="100vw" widths={[800, 1400, 2000]} />
-    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-void via-void/90 to-void/60"></div>
-    <div class="container-x grid items-center gap-14 lg:grid-cols-2">
-      <div class="reveal">
-        <p class="eyebrow mb-4 !text-silver">Turnkey ADU packages</p>
-        <h2 class="font-display text-display-lg !text-white">Turn your backyard into a finished home.</h2>
-        <p class="mt-5 text-lg leading-relaxed text-silver">Our ground-up ADU packages are priced from {site.aduPriceRange.label.split('–')[0]} and run up to {site.aduPriceRange.label.split('–')[1]} for our 1,200 sq ft, 2-bedroom, 1-bath flagship — one contract covering design, engineering, permits and construction. Final pricing depends on site conditions, utilities and finishes.</p>
-        <ul class="mt-7 grid gap-3 sm:grid-cols-2">{aduIncluded.map((i) => <li class="flex items-center gap-3"><span class="flex h-7 w-7 items-center justify-center rounded-full bg-blue text-white"><Icon name="check" size={15} /></span>{i}</li>)}</ul>
-        <div class="mt-9 flex flex-wrap gap-3"><a href="/adu-construction" class="btn btn-primary" data-track="cta" data-loc="adu-feature">Explore our ADUs <Icon name="arrow" size={18} /></a><a href="/projects/adu-model-plans" class="btn btn-ghost-light">View model plans A–E</a></div>
-      </div>
-      <div class="reveal grid grid-cols-2 gap-4">
-        <Photo name="elliot-adu-gallery-05" alt="Kitchen and entry of a finished ADU built by Wayco Construction" ratio="3/4" class="w-full rounded-3xl" sizes="(min-width:1024px) 22vw, 45vw" widths={[400, 700, 1000]} />
-        <Photo name="walker-adu-gallery-02" alt="Hardwood-floored living space in a Wayco-built ADU" ratio="3/4" class="mt-10 w-full rounded-3xl" sizes="(min-width:1024px) 22vw, 45vw" widths={[400, 700, 1000]} />
+  <!-- MARKETS -->
+  <section class="section bg-bone" data-section="markets">
+    <div class="container-x">
+      <SectionHead eyebrow="What we build" title="Markets we serve." />
+      <div class="mt-12 grid gap-8 lg:grid-cols-2">
+        {[{ k: 'commercial', t: 'Commercial & hospitality', href: '/commercial', photo: 'casino-pauma-gallery-03', items: markets.commercial }, { k: 'residential', t: 'Residential & ADUs', href: '/residential', photo: 'elliot-adu-gallery-05', items: markets.residential }].map((m) => (
+          <div class="reveal overflow-hidden rounded-2xl bg-white shadow-soft ring-1 ring-line">
+            <a href={m.href} class="group relative block"><Photo name={m.photo} alt="" ratio="16/7" class="w-full transition duration-700 group-hover:scale-105" sizes="(min-width:1024px) 45vw, 100vw" widths={[500, 900, 1300]} /><div class="absolute inset-0 bg-gradient-to-t from-void/80 to-transparent"></div><h3 class="absolute bottom-5 left-6 font-display text-display-md !text-white">{m.t}</h3></a>
+            <ul class="grid gap-x-6 p-6 sm:grid-cols-2">{m.items.map(([n, h]) => <li class="border-b border-line"><a href={h} class="flex items-center justify-between py-3.5 text-[0.98rem] font-medium text-ink transition hover:text-blue">{n}<Icon name="arrow" size={16} class="text-blue" /></a></li>)}</ul>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- PROCESS -->
-  <section class="section" data-section="process">
+  <!-- VIDEO -->
+  <section class="section" data-section="video">
     <div class="container-x">
-      <SectionHead eyebrow="How it works" title="From first call to first day on site in about four weeks." text="Speed comes from doing design, engineering and procurement in parallel — not from cutting corners." />
-      <div class="mt-12"><Steps steps={startSteps} /></div>
+      <div class="flex flex-wrap items-end justify-between gap-6"><div><p class="eyebrow eyebrow-rule mb-4">Videos</p><h2 class="font-display text-display-lg">Wayco in action.</h2></div></div>
+      <div class="reveal relative mt-10 overflow-hidden rounded-2xl bg-void shadow-lift" id="reel">
+        <Photo name="inc-video" alt="Interior of a modern home built by Wayco Construction — play the reel" ratio="16/8" class="w-full" sizes="(min-width:1320px) 1240px, 100vw" widths={[800, 1200, 1800]} />
+        <button type="button" id="reel-play" class="absolute inset-0 flex items-center justify-center bg-void/30 transition hover:bg-void/20" aria-label="Play the Wayco Construction reel" data-track="cta" data-loc="video">
+          <span class="flex h-20 w-20 items-center justify-center rounded-full bg-blue text-white shadow-glow transition hover:scale-105 sm:h-24 sm:w-24"><Icon name="play" size={34} /></span>
+        </button>
+      </div>
     </div>
   </section>
 
-  <!-- PROJECTS -->
-  <section class="section bg-bone-2" data-section="projects">
+  <!-- NEWS -->
+  <section class="bg-blue-soft py-16 sm:py-20" data-section="news">
     <div class="container-x">
-      <div class="flex flex-wrap items-end justify-between gap-6">
-        <SectionHead eyebrow="Selected work" title="Residential craft. Commercial scale." text="Kitchens, baths and ADUs for homeowners — and casinos, hotels, airports and medical offices for owners who can’t afford surprises." />
-        <a href="/projects" class="link-arrow">Full portfolio <Icon name="arrow" size={16} /></a>
-      </div>
-      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{projects.map((p) => <div class="reveal"><ProjectCard project={p} /></div>)}</div>
+      <div class="flex flex-wrap items-end justify-between gap-6"><h2 class="font-display text-display-lg">News &amp; insights</h2><a href="/blog" class="link-arrow text-sm font-bold uppercase tracking-[0.05em]">View all <Icon name="arrow" size={16} /></a></div>
+      <ul class="-mx-5 mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0" tabindex="0" aria-label="Latest articles">
+        {posts.slice(0, 3).map((p) => (
+          <li class="w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-auto">
+            <a href={`/blog/${p.id}`} class="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-soft ring-1 ring-line/60 transition hover:-translate-y-1 hover:shadow-lift">
+              <Photo name={p.data.heroPhoto} alt="" ratio="16/10" class="w-full transition duration-700 group-hover:scale-105" sizes="(min-width:1024px) 30vw, 80vw" widths={[400, 700, 1000]} />
+              <div class="flex flex-1 flex-col p-6"><p class="eyebrow">{p.data.category} · {fmt(p.data.pubDate)}</p><h3 class="mt-2 font-display text-xl leading-snug">{p.data.title}</h3><span class="mt-auto pt-4 text-sm font-bold uppercase tracking-[0.05em] text-blue">Read more</span></div>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
   <!-- REVIEWS -->
-  <section class="on-dark bg-ink py-20 text-white sm:py-28" data-section="reviews">
+  <section class="section" data-section="reviews">
     <div class="container-x">
-      <div class="flex flex-wrap items-end justify-between gap-8">
-        <SectionHead dark eyebrow="Google reviews" title="What our clients say — in their own words." />
-        <div class="flex flex-col items-start gap-3 sm:items-end"><ReviewBadge dark /><a href="/reviews" class="link-arrow !text-white">Read all reviews <Icon name="arrow" size={16} /></a></div>
-      </div>
-      <div class="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {featuredReviews.slice(0, 6).map((r) => <div class="reveal"><ReviewCard review={r} dark /></div>)}
-      </div>
-      <div class="mt-10 flex flex-wrap gap-3"><a href={site.google.writeReviewUrl} target="_blank" rel="noopener" class="btn btn-ghost-light" data-track="google-review" data-dest="write">Leave us a Google review</a></div>
+      <div class="flex flex-wrap items-end justify-between gap-8"><SectionHead eyebrow="Google reviews" title="In our clients’ words." /><div class="flex flex-col items-start gap-3 sm:items-end"><ReviewBadge /><a href="/reviews" class="link-arrow text-sm font-bold uppercase tracking-[0.05em]">Read all reviews <Icon name="arrow" size={16} /></a></div></div>
+      <div class="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{featuredReviews.slice(0, 6).map((r) => <div class="reveal"><ReviewCard review={r} /></div>)}</div>
+      <div class="mt-10"><a href={site.google.writeReviewUrl} target="_blank" rel="noopener" class="btn btn-ghost !rounded-md text-[0.82rem] font-bold uppercase tracking-[0.06em]" data-track="google-review" data-dest="write">Leave us a Google review</a></div>
     </div>
   </section>
 
-  <!-- WHY WAYCO + TEAM -->
-  <section class="section" data-section="why">
-    <div class="container-x grid items-center gap-14 lg:grid-cols-[1fr_1.15fr]">
+  <!-- WHY + TEAM -->
+  <section class="on-dark bg-void py-20 text-white sm:py-28" data-section="why">
+    <div class="container-x grid items-center gap-14 lg:grid-cols-[1fr_1.2fr]">
       <div class="reveal relative">
-        <Photo name={josh.photo} alt="Josh Coit, President of Wayco Construction" ratio="4/5" class="w-full rounded-[2rem]" sizes="(min-width:1024px) 40vw, 90vw" widths={[500, 800, 1100]} />
-        <div class="absolute -bottom-6 -right-2 max-w-[17rem] rounded-2xl bg-ink p-5 text-white shadow-lift sm:-right-6"><p class="font-display text-xl leading-snug !text-white">Josh Coit</p><p class="mt-1 text-sm text-silver">President · 25+ years in design-build &amp; construction management</p></div>
+        <Photo name={josh.photo} alt="Josh Coit, President of Wayco Construction" ratio="4/5" class="w-full rounded-2xl" sizes="(min-width:1024px) 40vw, 90vw" widths={[500, 800, 1100]} position="top" />
+        <div class="absolute -bottom-6 -right-2 max-w-[17rem] rounded-xl bg-white p-5 text-ink shadow-lift sm:-right-6"><p class="font-display text-xl">Josh Coit</p><p class="mt-1 text-sm text-steel-2">President · 25+ years in design-build &amp; construction management</p></div>
       </div>
       <div>
-        <SectionHead eyebrow="Why Wayco" title="Built on communication, craftsmanship and follow-through." />
-        <div class="mt-10 grid gap-6 sm:grid-cols-2">
-          {why.map((w) => <div class="reveal"><span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-soft text-blue"><Icon name={w.icon} size={22} /></span><h3 class="mt-4 font-display text-xl">{w.t}</h3><p class="mt-2 leading-relaxed text-steel-2">{w.d}</p></div>)}
-        </div>
-        <a href="/meet-the-team" class="btn btn-dark mt-10">Meet the team <Icon name="arrow" size={18} /></a>
+        <SectionHead dark eyebrow="Why Wayco" title="Built on communication, craftsmanship and follow-through." />
+        <div class="mt-10 grid gap-8 sm:grid-cols-2">{why.map((w) => <div class="reveal"><span class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue text-white"><Icon name={w.icon} size={22} /></span><h3 class="mt-4 font-display text-xl !text-white">{w.t}</h3><p class="mt-2 leading-relaxed text-silver">{w.d}</p></div>)}</div>
+        <a href="/meet-the-team" class="btn btn-light mt-10 !rounded-md text-[0.82rem] font-bold uppercase tracking-[0.06em]">Meet the team <Icon name="arrow" size={16} /></a>
       </div>
     </div>
   </section>
 
   <!-- AREAS -->
-  <section class="section bg-bone-2 pt-16" data-section="areas">
+  <section class="section" data-section="areas">
     <div class="container-x grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-center">
       <SectionHead eyebrow="Where we build" title="Based in El Cajon. Building across San Diego County." text="Our office and showroom (by appointment) are at 1069 Graves Ave. We regularly build in these communities and beyond." />
-      <ul class="reveal flex flex-wrap gap-2.5">
-        {areas.map((a) => <li><a href={`/areas/${a.slug}`} class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-[0.95rem] font-medium shadow-soft ring-1 ring-line/60 transition hover:bg-blue hover:text-white"><Icon name="pin" size={15} />{a.name}</a></li>)}
-      </ul>
+      <ul class="reveal flex flex-wrap gap-2.5">{areas.map((a) => <li><a href={`/areas/${a.slug}`} class="inline-flex items-center gap-2 rounded-md border border-line bg-white px-4 py-2.5 text-[0.92rem] font-semibold transition hover:border-blue hover:bg-blue hover:text-white"><Icon name="pin" size={14} />{a.name}</a></li>)}</ul>
     </div>
   </section>
 
-  <!-- PARTNERS -->
-  <section class="section py-14" aria-label="Material and building partners">
-    <div class="container-x"><p class="eyebrow mb-8 text-center">Trusted material &amp; building partners</p><LogoWall /></div>
-  </section>
+  <section class="border-y border-line bg-bone py-12" aria-label="Material and building partners"><div class="container-x"><p class="eyebrow mb-8 text-center">Trusted material &amp; building partners</p><LogoWall /></div></section>
 
-  <!-- FAQ -->
-  <section class="section pt-6" data-section="faq">
-    <div class="container-n"><Faq faqs={homeFaqs} title="Questions we hear every week" /><p class="mt-6 text-center"><a href="/faqs" class="link-arrow">See all FAQs <Icon name="arrow" size={16} /></a></p></div>
-  </section>
+  <section class="section" data-section="faq"><div class="container-n"><Faq faqs={homeFaqs} title="Questions we hear every week" /><p class="mt-6 text-center"><a href="/faqs" class="link-arrow">See all FAQs <Icon name="arrow" size={16} /></a></p></div></section>
 
-  <CtaBand />
+  <CtaBand title="Tell us what you’re building." photo="casino-pauma-gallery-03" />
 
   <script is:inline>
-    // Hero reel only on desktop-class connections; mobile / reduced-motion / data-saver keep the optimized still (faster LCP, ~6 MB saved).
     (function () {
-      var v = document.getElementById('hero-video'); if (!v) return;
-      var ok = window.matchMedia('(min-width: 1024px)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && (navigator.connection.saveData || /2g/.test(navigator.connection.effectiveType || '')));
-      if (!ok) return;
-      var start = function () { v.src = v.getAttribute('data-src'); v.addEventListener('playing', function () { v.style.opacity = '0.9'; }, { once: true }); v.play().catch(function () {}); };
-      if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 2500 }); else setTimeout(start, 1200);
+      var b = document.getElementById('reel-play'); if (!b) return;
+      b.addEventListener('click', function () {
+        var box = document.getElementById('reel'), v = document.createElement('video');
+        v.src = '/video/wayco-reel.mp4'; v.controls = true; v.autoplay = true; v.playsInline = true; v.className = 'absolute inset-0 h-full w-full bg-black object-contain';
+        box.appendChild(v); b.remove();
+        (window.dataLayer = window.dataLayer || []).push({ event: 'video_play', video_title: 'Wayco reel' });
+      });
     })();
   </script>
 </BaseLayout>

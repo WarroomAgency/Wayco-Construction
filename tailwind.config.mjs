@@ -4,17 +4,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        void: '#080B12',
-        ink: '#0E131D',
-        steel: '#1A2231',
-        'steel-2': '#273044',
-        blue: { DEFAULT: '#2747B0', hi: '#3E63E0', lo: '#1B3382', soft: '#E7ECFB' },
+        void: '#0A1430',
+        ink: '#0F1A36',
+        steel: '#1B2747',
+        'steel-2': '#3B4663',
+        blue: { DEFAULT: '#2747B0', hi: '#4B73F0', lo: '#1B3382', soft: '#DCE7FB' },
         silver: { DEFAULT: '#C4C9D2', 2: '#8E96A4', 3: '#5E6675' },
-        bone: { DEFAULT: '#F5F3EE', 2: '#ECE8DF', 3: '#DDD7C8' },
-        line: '#D9D4C7',
+        bone: { DEFAULT: '#F4F6FA', 2: '#E8EDF6', 3: '#D5DDEC' },
+        line: '#D7DEEB',
       },
       fontFamily: {
-        display: ['"Fraunces Variable"', 'Georgia', 'serif'],
+        display: ['"Inter Variable"', 'system-ui', '-apple-system', 'sans-serif'],
         sans: ['"Inter Variable"', 'system-ui', '-apple-system', 'sans-serif'],
       },
       letterSpacing: { widest: '0.22em' },
@@ -25,10 +25,10 @@ export default {
         glow: '0 12px 40px rgba(62,99,224,.45)',
       },
       fontSize: {
-        hero: ['clamp(2.4rem, 5.2vw, 4.5rem)', { lineHeight: '1.02', letterSpacing: '-0.025em', fontWeight: '500' }],
-        'display-lg': ['clamp(2rem, 4.4vw, 3.6rem)', { lineHeight: '1.06', letterSpacing: '-0.02em', fontWeight: '500' }],
-        'display-md': ['clamp(1.6rem, 3vw, 2.4rem)', { lineHeight: '1.12', letterSpacing: '-0.015em', fontWeight: '500' }],
-        'display-sm': ['clamp(1.25rem, 2vw, 1.55rem)', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '500' }],
+        hero: ['clamp(2.4rem, 5.4vw, 4.6rem)', { lineHeight: '1.03', letterSpacing: '-0.035em', fontWeight: '600' }],
+        'display-lg': ['clamp(2rem, 4.4vw, 3.5rem)', { lineHeight: '1.06', letterSpacing: '-0.03em', fontWeight: '600' }],
+        'display-md': ['clamp(1.6rem, 3vw, 2.3rem)', { lineHeight: '1.12', letterSpacing: '-0.025em', fontWeight: '600' }],
+        'display-sm': ['clamp(1.25rem, 2vw, 1.5rem)', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '600' }],
         eyebrow: ['0.72rem', { lineHeight: '1', letterSpacing: '0.22em', fontWeight: '600' }],
       },
       keyframes: {

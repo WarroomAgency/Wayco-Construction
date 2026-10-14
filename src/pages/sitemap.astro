@@ -6,7 +6,7 @@ import { projects } from '~/data/projects';
 import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog')).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
 const cols = [
-  { t: 'Main', l: [['Home', '/'], ['All services', '/services'], ['Projects', '/projects'], ['Google reviews', '/reviews'], ['About', '/about'], ['Meet the team', '/meet-the-team'], ['FAQs', '/faqs'], ['Areas we serve', '/serving-area'], ['Blog', '/blog'], ['Contact', '/contact'], ['Request a consultation', '/request-consultation'], ['Search', '/search']] },
+  { t: 'Main', l: [['Home', '/'], ['Commercial', '/commercial'], ['Residential & ADUs', '/residential'], ['All services', '/services'], ['Projects', '/projects'], ['Google reviews', '/reviews'], ['About', '/about'], ['Meet the team', '/meet-the-team'], ['FAQs', '/faqs'], ['Areas we serve', '/serving-area'], ['Blog', '/blog'], ['Contact', '/contact'], ['Request a consultation', '/request-consultation'], ['Search', '/search']] },
   { t: 'Services', l: services.map((s) => [s.name, `/${s.slug}`]) },
   { t: 'Areas', l: areas.map((a) => [`${a.name}, CA`, `/areas/${a.slug}`]) },
   { t: 'Projects', l: projects.map((p) => [p.name, `/projects/${p.slug}`]) },

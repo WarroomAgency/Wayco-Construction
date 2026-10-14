@@ -9,7 +9,6 @@ import Lightbox from '~/components/Lightbox.astro';
 import { site } from '~/data/site';
 import { ids, orgNode, localBusinessNode, websiteNode } from '~/lib/seo';
 import interUrl from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
-import frauncesUrl from '@fontsource-variable/fraunces/files/fraunces-latin-opsz-normal.woff2?url';
 import consentBoot from '~/scripts/consent-boot.js?raw';
 import siteJs from '~/scripts/site.js?raw';
 
@@ -36,7 +35,7 @@ const graph = { '@context': 'https://schema.org', '@graph': [orgNode(), localBus
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0E131D" />
+    <meta name="theme-color" content="#FFFFFF" />
     <meta name="format-detection" content="telephone=yes" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" href="/images/favicon-192.png" type="image/png" sizes="192x192" />
@@ -45,7 +44,6 @@ const graph = { '@context': 'https://schema.org', '@graph': [orgNode(), localBus
     <link rel="alternate" type="application/rss+xml" title="Wayco Construction Blog" href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="preload" href={interUrl} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={frauncesUrl} as="font" type="font/woff2" crossorigin />
     <Seo {title} {description} {path} {ogPhoto} {ogType} {noindex} {published} {modified} {fullTitle} />
     <script is:inline set:html={consentBoot}></script>
     {site.gtmId && <script is:inline set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${site.gtmId}');`}></script>}

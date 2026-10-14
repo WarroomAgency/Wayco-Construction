@@ -1,0 +1,96 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import AnswerBox from '~/components/AnswerBox.astro';
+import QuoteForm from '~/components/QuoteForm.astro';
+import ServiceCard from '~/components/ServiceCard.astro';
+import ProjectCard from '~/components/ProjectCard.astro';
+import ReviewCard from '~/components/ReviewCard.astro';
+import ReviewBadge from '~/components/ReviewBadge.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import Steps from '~/components/Steps.astro';
+import Faq from '~/components/Faq.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import Icon from '~/components/Icon.astro';
+import { commercial, process } from '~/data/services';
+import { projects } from '~/data/projects';
+import { reviews } from '~/data/reviews';
+import { faqGroups } from '~/data/faqs';
+import { site } from '~/data/site';
+import { breadcrumbNode, faqNode, abs, ids } from '~/lib/seo';
+const faqs = faqGroups.find((g) => g.id === 'commercial')!.faqs;
+const work = projects.filter((p) => p.sector === 'commercial');
+const revs = reviews.filter((r) => r.tags.includes('commercial') || (r.tags.includes('gc') && /commercial|architect|engineering|subcontractor/i.test(r.text))).slice(0, 3);
+const sectors = [
+  ['Hospitality & gaming', 'Casinos, bars, lounges and restaurants', '/hospitality-and-gaming'],
+  ['Hotels', 'Guestrooms, lobbies and exteriors', '/projects/hotel-projects'],
+  ['Healthcare', 'Medical and dental office build-outs', '/projects/medical-office-la-jolla'],
+  ['Aviation & industrial', 'Hangars, metal buildings and warehouses', '/projects/airport-hangars'],
+  ['Multi-family', 'Ground-up and renovation', '/multi-family-construction'],
+  ['Retail & tenant improvement', 'Storefronts and interior build-outs', '/tenant-improvement'],
+  ['Historic & public', 'Landmark and sensitive-site work', '/projects/cabrillo-national-monument'],
+];
+const steps = [
+  { title: 'Scope & budget', text: 'We review your plans or program, flag cost and schedule risks early, and give you a clear budget basis.' },
+  { title: 'Design-build or build-to-plans', text: 'Work with us from concept through construction, or build from your architect’s and engineer’s documents.' },
+  { title: 'Permits & procurement', text: 'Permitting, submittals, long-lead items and subcontractor buyout are managed in parallel.' },
+  { title: 'Build & coordinate', text: 'A dedicated project manager and superintendent run the site, safety, inspections and your reporting.' },
+  { title: 'Closeout & warranty', text: 'Punch list, documentation and a 1-year workmanship warranty — and a team that picks up the phone.' },
+];
+const url = abs('/commercial');
+const page = { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: 'Commercial General Contractor in San Diego County', isPartOf: { '@id': ids.site }, about: { '@id': ids.business }, speakable: { '@type': 'SpeakableSpecification', cssSelector: ['[data-answer]', 'h1'] } };
+---
+<BaseLayout title="Commercial General Contractor in San Diego County" description="Wayco Construction builds hotels, casinos, bars, medical offices, multi-family and tenant improvements across San Diego County. Design-build, permits handled. Free consultation." path="/commercial" ogPhoto="humphry-s-pool-bar-gallery-14-1" schema={[page, breadcrumbNode([{ name: 'Home', path: '/' }, { name: 'Commercial', path: '/commercial' }]), faqNode(faqs)]}>
+  <PageHero eyebrow="Commercial & hospitality" h1="Commercial general contractor serving San Diego County" lead="Hotels, casinos, bars and restaurants, medical offices, multi-family, aviation and tenant improvements — delivered by a design-build team that has built them at scale." photo="humphry-s-pool-bar-gallery-14-1" photoAlt="Resort pool bar at dusk built by the Wayco Construction team" crumbs={[{ name: 'Commercial' }]} secondaryHref="#projects" secondaryLabel="See commercial work" chips={['Permits handled', '1-year workmanship warranty', 'Design-build or build-to-plans']} />
+
+  <section class="section">
+    <div class="container-x grid items-start gap-12 lg:grid-cols-[1.5fr_1fr]">
+      <div class="space-y-8">
+        <AnswerBox text="Wayco Construction is a design-build commercial general contractor in El Cajon, CA. Our team builds hotels, casinos, bars and restaurants, medical offices, multi-family housing, retail and tenant improvements, hangars and metal buildings — managing design, permits, procurement, safety and schedule so owners, developers, architects and operators deal with one accountable contractor." label="Commercial at a glance" />
+        <div class="space-y-5 text-lg leading-relaxed text-steel">
+          <p>Commercial construction rewards preparation. The leadership team at Wayco has delivered large, complicated projects — gaming floors, hotel renovations, airport and hangar facilities, a historic landmark, and medical offices — where schedules, safety and budgets are not negotiable.</p>
+          <p>We bring that discipline to every commercial client in San Diego County, from a first tenant improvement to a ground-up building. Architects and engineers who work with us describe a team that is organized, schedule-driven and easy to collaborate with.</p>
+        </div>
+        <ReviewBadge />
+      </div>
+      <div class="lg:sticky lg:top-28"><QuoteForm id="commercial" audience="commercial" compact title="Start a commercial project" sub="Share your scope, location and target dates. We’ll respond within one business day." /></div>
+    </div>
+  </section>
+
+  <section class="section bg-bone" id="sectors">
+    <div class="container-x">
+      <SectionHead eyebrow="Markets" title="Commercial sectors we build." />
+      <ul class="mt-12 grid gap-px overflow-hidden rounded-2xl bg-line ring-1 ring-line sm:grid-cols-2 lg:grid-cols-3">
+        {sectors.map(([n, d, h]) => <li class="bg-white"><a href={h} class="group flex h-full items-start justify-between gap-4 p-7 transition hover:bg-blue-soft"><span><span class="block font-display text-xl">{n}</span><span class="mt-1 block text-steel-2">{d}</span></span><Icon name="arrow" size={20} class="mt-1 shrink-0 text-blue transition group-hover:translate-x-1" /></a></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="projects">
+    <div class="container-x">
+      <div class="flex flex-wrap items-end justify-between gap-6"><SectionHead eyebrow="Commercial portfolio" title="Selected commercial work" /><a href="/projects" class="link-arrow text-sm font-bold uppercase tracking-[0.05em]">Full portfolio <Icon name="arrow" size={16} /></a></div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{work.slice(0, 6).map((p) => <div class="reveal"><ProjectCard project={p} /></div>)}</div>
+    </div>
+  </section>
+
+  <section class="section bg-bone">
+    <div class="container-x">
+      <SectionHead eyebrow="Services" title="Commercial construction services" />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{commercial.map((s) => <div class="reveal"><ServiceCard service={s} /></div>)}</div>
+      <p class="mt-8 text-steel-2">Need help before construction? See <a class="font-semibold text-blue" href="/design-build">design-build</a>, <a class="font-semibold text-blue" href="/design-and-planning">design &amp; planning</a> and <a class="font-semibold text-blue" href="/construction-management">construction management</a>.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-x"><SectionHead eyebrow="How we deliver" title="A commercial process built on preparation." /><div class="mt-12"><Steps steps={steps} /></div></div>
+  </section>
+
+  {revs.length > 0 && (
+    <section class="on-dark bg-void py-20 text-white sm:py-24">
+      <div class="container-x"><SectionHead dark eyebrow="What owners, architects & engineers say" title="Collaborative, organized and schedule-driven." /><div class="mt-10 grid gap-5 md:grid-cols-3">{revs.map((r) => <div class="reveal"><ReviewCard review={r} dark /></div>)}</div><p class="mt-8"><a href="/reviews" class="link-arrow !text-white">Read all {site.google.reviewCount} Google reviews <Icon name="arrow" size={16} /></a></p></div>
+    </section>
+  )}
+
+  <section class="section"><div class="container-n"><Faq faqs={faqs} title="Commercial projects: your questions" eyebrow="FAQ" /></div></section>
+  <CtaBand title="Planning a commercial project?" text="Send us your scope, plans or just an idea. We’ll tell you what it takes, what it costs and when we can start." photo="casino-pauma-gallery-03" />
+</BaseLayout>
